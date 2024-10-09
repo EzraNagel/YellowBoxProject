@@ -38,4 +38,24 @@ class Movie(db.Model):
 
     def __repr__(self):
         return f"<Movie(title={self.title}, id={self.id})>"
+    
+class Rating(db.Model):
+    __tablename__ = 'ratings'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    movieId = db.Column(BigInteger, nullable=True)
+    rating = db.Column(db.Float, nullable=True)
+    timestamp = db.Column(db.BigInteger, nullable=True)
 
+    def __repr__(self):
+        return f"<Rating(movieId={self.movieId}, userId={self.userId})>"
+
+class Credit(db.Model):
+    __tablename = 'ratings'
+    
+    id = db.Column(BigInteger, primary_key=True)
+    cast = db.Column(JSON, nullable=True)
+    crew = db.Column(JSON, nullable = True)
+    
+    def __repr__(self):
+        return f"<Credit(movieId={self.movieId})>"

@@ -6,7 +6,10 @@ To run:
     source .venv/bin/activate
     pip install -r requirements.txt
 
-Test database connection- returns all movies in database:
+Test database connection- returns all movies in database (currently empty):
+    export FLASK_APP=app
     flask shell
-    >>> from app import db, Movie
+    >>> from app import db, Movie, Rating
     >>> Movie.query.all()
+    >>> Rating.query.all()
+    >>> Credit.query.all()
