@@ -1,0 +1,12 @@
+CSC 407 Project
+Ethan Engert and Ezra Nagel
+
+To run:
+    python -m venv .venv
+    source .venv/bin/activate
+    pip install -r requirements.txt
+
+Test database connection- returns all movies in database:
+    flask shell
+    >>> from app import db, Movie
+    >>> Movie.query.all()
