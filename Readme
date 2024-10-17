@@ -6,10 +6,20 @@ To run:
     source .venv/bin/activate
     pip install -r requirements.txt
 
-Test database connection- returns all movies in database (currently empty):
-    export FLASK_APP=app
-    flask shell
-    >>> from app import db, Movie, Rating
-    >>> Movie.query.all()
-    >>> Rating.query.all()
-    >>> Credit.query.all()
+Create mysql database if not done already:
+    mysql -u root -p
+    
+    CREATE DATABASE yellowbox_db;
+    CREATE USER 'yellowbox_user'@'localhost' IDENTIFIED BY 'password';
+    GRANT ALL PRIVILEGES ON yellowbox_db.* TO 'yellowbox_user'@'localhost';
+    FLUSH PRIVILEGES;
+
+Create Tables:
+    cd yellowbox
+    python app.py
+    python importTables.py
+
+Check if worked:
+    python testData.py
+    
+    
