@@ -51,7 +51,7 @@ class Rating(db.Model):
         return f"<Rating(movieId={self.movieId}, userId={self.userId})>"
 
 class Credit(db.Model):
-    __tablename = 'ratings'
+    __tablename__ = 'credits'
     
     id = db.Column(BigInteger, primary_key=True)
     cast = db.Column(JSON, nullable=True)
@@ -59,3 +59,62 @@ class Credit(db.Model):
     
     def __repr__(self):
         return f"<Credit(movieId={self.movieId})>"
+
+class User(db.Model):
+    __tablename__ = 'users'
+
+    id = db.Column(BigInteger, primary_key=True)
+    username = db.Column(db.String, nullable=False)
+    password = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, nullable=False)
+
+    def __repr__(self):
+        return f"User(id={self.id})>"
+
+class Disk(db.Model):
+    __tablename__ = "disks"
+
+    id = db.Column(BigInteger, primary_key=True)
+    movieId = db.Column(BigInteger, nullable=False)
+    location = db.Column(db.Integer, nullable=True)
+    condition = username = db.Column(db.String, nullable=True)
+
+    def __repr__(self):
+        return f"<Disk(id={self.id})>"
+
+class Order(db.Model):
+    __tablename__ = "orders"
+
+    id = db.Column(BigInteger, primary_key=True)
+    movieId = db.Column(BigInteger, nullable=False)
+    customerId = db.Column(BigInteger, nullable=False)
+    checkoutDate = db.Column(db.BigInteger, nullable=False)
+    returnDate = db.Column(db.BigInteger, nullable=False)
+    rating = db.Column(db.Float, nullable=True)
+    review = db.Column(JSON, nullable=True)
+
+    def __repr__(self):
+        return f"<Order(id={self.id})>"
+
+@app.route('/')
+def base():
+
+    return render_template('base.html')
+
+@app.route('/movies')
+def movies():
+
+    return render_template('movies.html')
+
+@app.route('/kiosks')
+def kiosks():
+
+    return render_template('kiosks.html')
+
+@app.route('/DVDs')
+def DVDs():
+
+    return render_template('DVDs.html')
+
+if __name__ == "__main__":
+    app.run(debug=True)
