@@ -1,4 +1,7 @@
 import os
+import mariadb
+import myDatabase as db
+import sys
 from flask import Flask, render_template, request, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 
@@ -99,20 +102,72 @@ class Order(db.Model):
 @app.route('/')
 def base():
 
-    return render_template('base.html')
+    # Connect to MariaDB Platform
+    try:
+        conn = db.myConnect()
+    except mariadb.Error as e:
+        print(f"Error connecting to MariaDB Platform: {e}")
+        sys.exit(1)
+
+    # Get Cursor
+    cur = conn.cursor(dictionary=True)
+
+    # Execute Query to return top 20 films
+    cur.execute('''SELECT TOP 20 m.poster_path
+                    FROM movies_metadata m 
+                    ORDER BY m.popularity''')
+    top_20 = cur.fetchall()
+
+    # Execute Query to return collections
+    cur.execute('''SELECT m.belongs_to_collection_poster_path
+                    FROM movies_metadata m 
+                    ORDER BY m.belongs_to_collection_name''')
+    collections = cur.fetchall()
+
+    return render_template('base.html', top_20, collections)
 
 @app.route('/movies')
 def movies():
+
+    # Connect to MariaDB Platform
+    try:
+        conn = db.myConnect()
+    except mariadb.Error as e:
+        print(f"Error connecting to MariaDB Platform: {e}")
+        sys.exit(1)
+
+    # Get Cursor
+    cur = conn.cursor(dictionary=True)
 
     return render_template('movies.html')
 
 @app.route('/kiosks')
 def kiosks():
 
+    # Connect to MariaDB Platform
+    try:
+        conn = db.myConnect()
+    except mariadb.Error as e:
+        print(f"Error connecting to MariaDB Platform: {e}")
+        sys.exit(1)
+
+    # Get Cursor
+    cur = conn.cursor(dictionary=True)
+
     return render_template('kiosks.html')
 
 @app.route('/DVDs')
 def DVDs():
+
+    # Connect to MariaDB Platform
+    try:
+        conn = db.myConnect()
+    except mariadb.Error as e:
+        print(f"Error connecting to MariaDB Platform: {e}")
+        sys.exit(1)
+
+    # Get Cursor
+    cur = conn.cursor(dictionary=True)
 
     return render_template('DVDs.html')
 
