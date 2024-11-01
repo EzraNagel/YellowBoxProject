@@ -32,57 +32,40 @@
                 <h2 class="title">Search for Movies</h2>
                 <h5>Select search criteria below or leave all fields blank to view all movies</h5>
                 <br />
-                <form action="{{ url_for('movies_search_results') }}" method="post" class="search-form">
-                    <label for="movie_genre"><b>Movie Genre</b></label>
-                    <select name="movie_genre" id="movie_genre">
-                      <option value="" SELECTED></option>
-                      {% for movie_genre in movie_genres %}
-                        <option value="{{ movie_genre['movie_genre'] }}" >{{ movie_genre['movie_genre'] }}</option>
-                      {% endfor %}
-                    </select>
-                    <br>
-                    <label for="run_time"><b>Run Time</b></label>
-                    <select name="run_time" id="run_time">
-                      <option value="" SELECTED></option>
-                      {% for run_time in run_times %}
-                        <option value="{{ run_time['run_time'] }}" >{{ run_time['run_time'] }}</option>
-                      {% endfor %}
-                    </select>
-                    <br>
-                    <label for="popularity"><b>Popularity</b></label>
-                    <select name="popularity" id="popularity">
-                      <option value="" SELECTED></option>
-                      {% for popularity in popularities %}
-                        <option value="{{ popularity['popularity'] }}" >{{ popularity['popularity'] }}</option>
-                      {% endfor %}
-                    </select>
-                    <br>
-                    <label for="release_date"><b>Release Date</b></label>
-                    <select name="release_date" id="release_date">
-                      <option value="" SELECTED></option>
-                      {% for release_date in release_dates %}
-                        <option value="{{ release_date['release_date'] }}" >{{ release_date['release_date'] }}</option>
-                      {% endfor %}
-                    </select>
-                    <br>
-                    <label for="rating"><b>Rating</b></label>
-                    <select name="rating" id="rating">
-                      <option value="" SELECTED></option>
-                      {% for rating in ratings %}
-                        <option value="{{ rating['rating'] }}" >{{ rating['rating'] }}</option>
-                      {% endfor %}
-                    </select>
-                    <br>
-                    <label for="title"><b>Title</b></label>
-                    <select name="title" id="title">
-                      <option value="" SELECTED></option>
-                      {% for title in titles %}
-                        <option value="{{ title['title'] }}" >{{ title['title'] }}</option>
-                      {% endfor %}
-                    </select>
-                    <br>
-                    <input type="submit" value="Search Movies" class="button is-primary has-text-primary-light" id="search_button" />
-                </form >
+                <form method="GET" action="{{ url_for('movies_search_results') }}">
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" name="title" oninput="fetchSuggestions(this.value)"
+                        autocomplete="off">
+                    <div id="suggestions" style="border: 1px solid #ccc; display: none;"></div>
+
+                    <label for="run_time_min">Runtime Min:</label>
+                    <input type="number" id="run_time_min" name="run_time_min">
+
+                    <label for="run_time_max">Runtime Max:</label>
+                    <input type="number" id="run_time_max" name="run_time_max">
+
+                    <label for="popularity_min">Popularity Min:</label>
+                    <input type="number" step="0.1" id="popularity_min" name="popularity_min">
+
+                    <label for="popularity_max">Popularity Max:</label>
+                    <input type="number" step="0.1" id="popularity_max" name="popularity_max">
+
+                    <label for="release_date_min">Release Date From:</label>
+                    <input type="date" id="release_date_min" name="release_date_min">
+
+                    <label for="release_date_max">Release Date To:</label>
+                    <input type="date" id="release_date_max" name="release_date_max">
+
+                    <label for="rating_min">Rating Min:</label>
+                    <input type="number" step="0.1" id="rating_min" name="rating_min">
+
+                    <label for="rating_max">Rating Max:</label>
+                    <input type="number" step="0.1" id="rating_max" name="rating_max">
+
+                    <button type="submit">Search</button>
+                </form>
+
+
 
                 <div class="display-collections"><strong>All Collections:</strong></div>
                 <ul>

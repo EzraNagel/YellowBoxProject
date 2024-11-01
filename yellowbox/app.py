@@ -130,9 +130,8 @@ def base():
     
     collections = db.session.query(Movie.belongs_to_collection).distinct().all()
     
-    # Parse each collection JSON string into a dictionary
     parsed_collections = []
-    for collection_json, in collections:  # collections is a list of tuples, hence the comma
+    for collection_json, in collections:
         if collection_json:
             try:
                 collection_data = json.loads(collection_json.replace("'", "\""))
@@ -142,6 +141,7 @@ def base():
                 })
             except json.JSONDecodeError:
                 pass
+    
                 
     return render_template('base.html', movies=top_movies, collections=parsed_collections)
 
@@ -149,10 +149,40 @@ def base():
 
 @app.route('/movies')
 def movies():
-
     movie_list = Movie.query.all()
-    
     return render_template('movies.html', movies=movie_list)
+
+@app.route('/movies_search_results', methods=['GET'])
+def movies_search_results():
+    title = request.args.get('title', '')
+    run_time_min = request.args.get('run_time_min', type=int)
+    run_time_max = request.args.get('run_time_max', type=int)
+    popularity_min = request.args.get('popularity_min', type=float)
+    popularity_max = request.args.get('popularity_max', type=float)
+    release_date_min = request.args.get('release_date_min', type=str)
+    release_date_max = request.args.get('release_date_max', type=str)
+    rating_min = request.args.get('rating_min', type=float)
+    rating_max = request.args.get('rating_max', type=float)
+
+    query = db.session.query(Movie)
+
+    if title:
+        query = query.filter(Movie.title.ilike(f'%{title}%'))
+    if run_time_min is not None and run_time_max is not None:
+        query = query.filter(Movie.runtime.between(run_time_min, run_time_max))
+    if popularity_min is not None and popularity_max is not None:
+        query = query.filter(Movie.popularity.between(popularity_min, popularity_max))
+    if release_date_min and release_date_max:
+        query = query.filter(Movie.release_date.between(release_date_min, release_date_max))
+    if rating_min is not None and rating_max is not None:
+        query = query.filter(Movie.vote_average.between(rating_min, rating_max))
+
+    movies = query.all()
+
+    return render_template('movies_search_results.html', movies=movies)
+
+
+
 
 @app.route('/movie/<int:movie_id>')
 def movie_detail(movie_id):
