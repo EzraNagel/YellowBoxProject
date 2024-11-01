@@ -114,17 +114,17 @@ def base():
 
     # Execute Query to return top 20 films
     cur.execute('''SELECT TOP 20 m.poster_path
-                    FROM movies_metadata m 
+                    FROM Movie m 
                     ORDER BY m.popularity''')
     top_20 = cur.fetchall()
 
     # Execute Query to return collections
     cur.execute('''SELECT m.belongs_to_collection_poster_path
-                    FROM movies_metadata m 
+                    FROM Movie m 
                     ORDER BY m.belongs_to_collection_name''')
     collections = cur.fetchall()
 
-    return render_template('base.html', top_20, collections)
+    return render_template('base.html', top_20=top_20, collections=collections)
 
 @app.route('/movies')
 def movies():
@@ -139,7 +139,12 @@ def movies():
     # Get Cursor
     cur = conn.cursor(dictionary=True)
 
-    return render_template('movies.html')
+    # Execute Query
+    cur.execute('''SELECT *
+                    FROM Movie m''')
+    movies = cur.fetchall()
+
+    return render_template('movies.html', movies=movies)
 
 @app.route('/kiosks')
 def kiosks():
@@ -154,7 +159,12 @@ def kiosks():
     # Get Cursor
     cur = conn.cursor(dictionary=True)
 
-    return render_template('kiosks.html')
+    # Execute Query
+    cur.execute('''SELECT *
+                    FROM Kiosk k''')
+    kiosks = cur.fetchall()
+
+    return render_template('kiosks.html', kiosks=kiosks)
 
 @app.route('/DVDs')
 def DVDs():
@@ -169,7 +179,12 @@ def DVDs():
     # Get Cursor
     cur = conn.cursor(dictionary=True)
 
-    return render_template('DVDs.html')
+    # Execute Query
+    cur.execute('''SELECT *
+                    FROM Disks d''')
+    DVDs = cur.fetchall()
+
+    return render_template('DVDs.html', DVDs=DVDs)
 
 if __name__ == "__main__":
     app.run(debug=True)

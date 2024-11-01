@@ -18,8 +18,8 @@
             {% block body %}
                 <h1 class="title">Welcome to Yellow Bucket!</h1>
 
-                <div class="display-posters"><strong>Top 20 Movies:</strong>  {{ movie['poster_path'] }}</div>
-                <div class="display-collections"><strong>All Collections:</strong>  {{ movie['belongs_to_collection'] }}</div>
+                <div class="display-posters"><strong>Top 20 Movies:</strong>  {{ top_20['poster_path'] }}</div>
+                <div class="display-collections"><strong>All Collections:</strong>  {{ collections['belongs_to_collection'] }}</div>
             {% endblock %}
             </main>
 
