@@ -29,6 +29,61 @@
                     {% endfor %}
                 </ul>
 
+                <h2 class="title">Search for Movies</h2>
+                <h5>Select search criteria below or leave all fields blank to view all movies</h5>
+                <br />
+                <form action="{{ url_for('movies_search_results') }}" method="post" class="search-form">
+                    <label for="movie_genre"><b>Movie Genre</b></label>
+                    <select name="movie_genre" id="movie_genre">
+                      <option value="" SELECTED></option>
+                      {% for movie_genre in movie_genres %}
+                        <option value="{{ movie_genre['movie_genre'] }}" >{{ movie_genre['movie_genre'] }}</option>
+                      {% endfor %}
+                    </select>
+                    <br>
+                    <label for="run_time"><b>Run Time</b></label>
+                    <select name="run_time" id="run_time">
+                      <option value="" SELECTED></option>
+                      {% for run_time in run_times %}
+                        <option value="{{ run_time['run_time'] }}" >{{ run_time['run_time'] }}</option>
+                      {% endfor %}
+                    </select>
+                    <br>
+                    <label for="popularity"><b>Popularity</b></label>
+                    <select name="popularity" id="popularity">
+                      <option value="" SELECTED></option>
+                      {% for popularity in popularities %}
+                        <option value="{{ popularity['popularity'] }}" >{{ popularity['popularity'] }}</option>
+                      {% endfor %}
+                    </select>
+                    <br>
+                    <label for="release_date"><b>Release Date</b></label>
+                    <select name="release_date" id="release_date">
+                      <option value="" SELECTED></option>
+                      {% for release_date in release_dates %}
+                        <option value="{{ release_date['release_date'] }}" >{{ release_date['release_date'] }}</option>
+                      {% endfor %}
+                    </select>
+                    <br>
+                    <label for="rating"><b>Rating</b></label>
+                    <select name="rating" id="rating">
+                      <option value="" SELECTED></option>
+                      {% for rating in ratings %}
+                        <option value="{{ rating['rating'] }}" >{{ rating['rating'] }}</option>
+                      {% endfor %}
+                    </select>
+                    <br>
+                    <label for="title"><b>Title</b></label>
+                    <select name="title" id="title">
+                      <option value="" SELECTED></option>
+                      {% for title in titles %}
+                        <option value="{{ title['title'] }}" >{{ title['title'] }}</option>
+                      {% endfor %}
+                    </select>
+                    <br>
+                    <input type="submit" value="Search Movies" class="button is-primary has-text-primary-light" id="search_button" />
+                </form >
+
                 <div class="display-collections"><strong>All Collections:</strong></div>
                 <ul>
                     {% for collection in collections %}

@@ -80,6 +80,16 @@ label {
   margin-bottom: 2rem;
 }
 
+input, select {
+  padding: 10px 12px !important;
+  margin: 0 0 20px 0;
+  display: inline-block !important;
+  border-radius: var(--bulma-control-radius);
+  box-sizing: border-box;
+  width: 20rem;
+  border: 1px solid #ccc;
+}
+
 .search-form select {
   width: 20rem;
 }
@@ -120,8 +130,32 @@ tr:nth-child(even){
   background-color: #dfdfdf;
 }
 
+.movie-list-search-block {
+  margin: 60px 0 40px;
+}
+
+.movie-list-search-block input {
+  margin-bottom: 0;
+}
+
+.movie-list-search-block button {
+  //padding-top: 10px;
+  //padding-bottom: 10px;
+  box-shadow: none;
+}
+
+#movie-listing-table {
+  border-collapse: collapse;
+}
+
 th {
   text-align: center !important;
+}
+
+.action-button {
+  float: left;
+  margin-right: 10px;
+  max-width: 40%;
 }
 
 footer {
