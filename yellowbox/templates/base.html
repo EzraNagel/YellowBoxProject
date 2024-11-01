@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Yellow Bucket{% endblock %}</title>
+</head>
+
+<header>
+    {% include 'navbar.html' %}
+</header>
+
+<body>
+    <section class="section">
+        <div class="container">
+            <main>
+                {% block body %}
+                <h1 class="title">Welcome to Yellow Bucket!</h1>
+
+                <div class="display-posters"><strong>Top 20 Movies:</strong></div>
+                <ul>
+                    {% for movie, average_rating in movies %}
+                    <li><a href="{{ url_for('movie_detail', movie_id=movie.id) }}">{{ movie.title }} - Average Rating:
+                            {{ average_rating | round(2) }}</a> <img
+                            src="https://image.tmdb.org/t/p/original{{ movie.poster_path }}" alt="movie poster"
+                            width="50"></li>
+
+                    {% endfor %}
+                </ul>
+
+                <div class="display-collections"><strong>All Collections:</strong></div>
+                <ul>
+                    {% for collection in collections %}
+                    <li>
+                        {{ collection.name }}
+                        <img src="https://image.tmdb.org/t/p/original{{ collection.poster_path }}"
+                            alt="{{ collection.name }}" width="50">
+                    </li>
+                    {% endfor %}
+                </ul>
+
+
+                {% endblock %}
+            </main>
+        </div>
+    </section>
+    {% include 'footer.html' %}
+</body>
+
+</html>
