@@ -2,6 +2,7 @@ import os
 import sys
 from flask import Flask, render_template, request, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
+import json
 
 from sqlalchemy import *
 
@@ -127,16 +128,36 @@ def base():
     ).join(Rating, Movie.id == Rating.movieId, isouter=True)
     top_movies = top_movies.group_by(Movie.id).order_by(db.desc('average_rating')).limit(20).all()
     
-    return render_template('base.html', movies=top_movies)
+    collections = db.session.query(Movie.belongs_to_collection).distinct().all()
+    
+    # Parse each collection JSON string into a dictionary
+    parsed_collections = []
+    for collection_json, in collections:  # collections is a list of tuples, hence the comma
+        if collection_json:
+            try:
+                collection_data = json.loads(collection_json.replace("'", "\""))
+                parsed_collections.append({
+                    'name': collection_data.get('name'),
+                    'poster_path': collection_data.get('poster_path')
+                })
+            except json.JSONDecodeError:
+                pass
+                
+    return render_template('base.html', movies=top_movies, collections=parsed_collections)
 
 
 
 @app.route('/movies')
 def movies():
 
-    movie_list = Movie.query.limit(20).all()
+    movie_list = Movie.query.all()
     
     return render_template('movies.html', movies=movie_list)
+
+@app.route('/movie/<int:movie_id>')
+def movie_detail(movie_id):
+    movie = Movie.query.get_or_404(movie_id)  
+    return render_template('movie_detail.html', movie=movie)
 
 @app.route('/kiosks')
 def kiosks():
