@@ -1,32 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% block title %}Kiosks - Yellow Bucket{% endblock %}
 
-    <title>{% block title %}Yellow Bucket{% endblock %}</title>
-</head>
-<header>
-    {% include 'navbar.html' %}
-</header>
-
-<body>
-    <section class="section">
-        <div class="container">
-            <main>
-                <h1>Kiosks</h1>
-                <ul>
-                    {% for kiosk in kiosks %}
-                    <li>ID: {{ kiosk.id }} - Address: {{ kiosk.address }}</li>
-                    {% endfor %}
-                </ul>
-            </main>
-
-
-        </div>
-    </section>
-    {% include 'footer.html' %}
-</body>
-
-</html>
+{% block body %}
+<h1 class="title">Kiosks</h1>
+<ul>
+    {% for kiosk in kiosks %}
+    <li>ID: {{ kiosk.id }} - Address: {{ kiosk.address }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

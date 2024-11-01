@@ -143,7 +143,7 @@ def base():
                 pass
     
                 
-    return render_template('base.html', movies=top_movies, collections=parsed_collections)
+    return render_template('home.html', movies=top_movies, collections=parsed_collections)
 
 
 
@@ -152,6 +152,15 @@ def movies():
     movie_list = Movie.query.all()
     return render_template('movies.html', movies=movie_list)
 
+@app.route('/collection_items')
+def collection_items():
+    collection_name = request.args.get('collection_name')
+    
+    movies = db.session.query(Movie).filter(Movie.belongs_to_collection.contains(collection_name)).all()
+
+    
+    return render_template('collection_items.html', movies=movies)
+    
 @app.route('/movies_search_results', methods=['GET'])
 def movies_search_results():
     title = request.args.get('title', '')

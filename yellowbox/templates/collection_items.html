@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Movie List - Yellow Bucket{% endblock %}
+
+{% block body %}
+<section class="section">
+    <div class="container">
+        <h1 class="title">Welcome to Yellow Bucket!</h1>
+
+        <h2>Collection Movies</h2>
+        <br />
+        <ul class="movie-grid">
+            {% for movie in movies %}
+            <li class="movie-item">
+                <a href="{{ url_for('movie_detail', movie_id=movie.id) }}">{{ movie.title }}</a><a
+                    href="{{ url_for('movie_detail', movie_id=movie.id) }}">
+                    <img src="https://image.tmdb.org/t/p/original{{ movie.poster_path }}"
+                        alt="{{ movie.title }} poster"></a>
+            </li>
+            {% endfor %}
+        </ul>
+        <br />
+        <button onclick="history.back()">Back to previous page</button>
+    </div>
+</section>
+{% endblock %}
