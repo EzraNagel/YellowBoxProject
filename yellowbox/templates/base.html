@@ -15,12 +15,18 @@
     <section class="section">
         <div class="container">
             <main>
-            {% block body %}
+                {% block body %}
                 <h1 class="title">Welcome to Yellow Bucket!</h1>
 
-                <div class="display-posters"><strong>Top 20 Movies:</strong>  {{ movie['poster_path'] }}</div>
-                <div class="display-collections"><strong>All Collections:</strong>  {{ movie['belongs_to_collection'] }}</div>
-            {% endblock %}
+                <div class="display-posters"><strong>Top 20 Movies:</strong> </div>
+                <ul>
+                    {% for movie, average_rating in movies %}
+                    <li>{{ movie.title }} - Average Rating: {{ average_rating | round(2) }}</li>
+                    {% endfor %}
+                </ul>
+                <div class="display-collections"><strong>All Collections:</strong>
+                </div>
+                {% endblock %}
             </main>
 
         </div>
