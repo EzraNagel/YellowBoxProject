@@ -3,8 +3,9 @@ import sys
 from flask import Flask, render_template, request, url_for, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 import json
-
 from sqlalchemy import *
+from sqlalchemy import BigInteger, JSON, Text, Date, Float
+
 
 
 # Database credentials
@@ -15,7 +16,17 @@ port = '3306'
 database = 'yellowbox_db'
 
 app = Flask(__name__)
+
 app.secret_key = os.urandom(24)
+
+
+# Credentials depend on how you set up the database
+user = 'yellowbox_user'
+password = 'password'
+host = 'localhost'
+port = '3306'
+database = 'yellowbox_db'
+
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{user}:{password}@{host}:{port}/{database}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -48,6 +59,7 @@ class Movie(db.Model):
     vote_average = db.Column(Float, nullable=True)
     vote_count = db.Column(Integer, nullable=True)
 
+
     def __repr__(self):
         return f"<Movie(title={self.title}, id={self.id})>"
 
@@ -64,12 +76,31 @@ class Rating(db.Model):
         return f"<Rating(movieId={self.movieId}, rating={self.rating})>"
 
 
+
 class Credit(db.Model):
     __tablename__ = 'credits'
     
     id = db.Column(BigInteger, primary_key=True)
     cast = db.Column(Text, nullable=True)
     crew = db.Column(Text, nullable=True)
+
+    
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(BigInteger, primary_key=True)
+    username = db.Column(db.String(255), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), nullable=False)
+    def __repr__(self):
+        return f"User(id={self.id})>"
+
+    
+class Disk(db.Model):
+    __tablename__ = "disks"
+    id = db.Column(BigInteger, primary_key=True)
+    movieId = db.Column(BigInteger, nullable=False)
+    location = db.Column(db.Integer, nullable=True)
+    condition = db.Column(db.String(255), nullable=True)
     
     def __repr__(self):
         return f"<Credit(id={self.id})>"
@@ -358,4 +389,22 @@ def success_add():
 if __name__ == "__main__":
     with app.app_context():
         db.create_all() 
+        return f"<Disk(id={self.id})>"
+    
+class Order(db.Model):
+    __tablename__ = "orders"
+    id = db.Column(BigInteger, primary_key=True)
+    movieId = db.Column(BigInteger, nullable=False)
+    customerId = db.Column(BigInteger, nullable=False)
+    checkoutDate = db.Column(db.BigInteger, nullable=False)
+    returnDate = db.Column(db.BigInteger, nullable=False)
+    rating = db.Column(db.Float, nullable=True)
+    review = db.Column(JSON, nullable=True)
+    def __repr__(self):
+        return f"<Order(id={self.id})>"
+
+with app.app_context():
+    db.create_all()
+
+if __name__ == "__main__":
     app.run(debug=True)
