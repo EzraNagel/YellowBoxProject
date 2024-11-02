@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Top Movies - Yellow Bucket{% endblock %}
+
+{% block body %}
+<h1 class="title">Welcome to Yellow Bucket!</h1>
+
+<div class="title"><strong>Top 20 Movies:</strong></div>
+<ul class="movie-grid">
+    {% for movie, average_rating in movies %}
+    <li class="movie-item"><a href="{{ url_for('movie_detail', movie_id=movie.id) }}">{{ movie.title }} - Average
+            Rating:
+            {{ average_rating | round(2) }}</a> <a href="{{ url_for('movie_detail', movie_id=movie.id) }}"><img
+                src="https://image.tmdb.org/t/p/original{{ movie.poster_path }}" alt="movie poster" width="50"></a></li>
+    {% endfor %}
+</ul>
+<br />
+<h2 class="title">Search for Movies</h2>
+<h5>Select search criteria below or leave all fields blank to view all movies</h5>
+<br />
+<form method="GET" action="{{ url_for('movies_search_results') }}">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" oninput="fetchSuggestions(this.value)" autocomplete="off">
+    <div id="suggestions" style="border: 1px solid #ccc; display: none;"></div>
+
+    <label for="run_time_min">Runtime Min:</label>
+    <input type="number" id="run_time_min" name="run_time_min">
+
+    <label for="run_time_max">Runtime Max:</label>
+    <input type="number" id="run_time_max" name="run_time_max">
+
+    <label for="popularity_min">Popularity Min:</label>
+    <input type="number" step="0.1" id="popularity_min" name="popularity_min">
+
+    <label for="popularity_max">Popularity Max:</label>
+    <input type="number" step="0.1" id="popularity_max" name="popularity_max">
+
+    <label for="release_date_min">Release Date From:</label>
+    <input type="date" id="release_date_min" name="release_date_min">
+
+    <label for="release_date_max">Release Date To:</label>
+    <input type="date" id="release_date_max" name="release_date_max">
+
+    <label for="rating_min">Rating Min:</label>
+    <input type="number" step="0.1" id="rating_min" name="rating_min">
+
+    <label for="rating_max">Rating Max:</label>
+    <input type="number" step="0.1" id="rating_max" name="rating_max">
+
+    <button type="submit">Search</button>
+</form>
+<br />
+<h1 class="title"><strong>All Collections:</strong></h1>
+<ul class="movie-grid">
+    {% for collection in collections %}
+    <li class="movie-item">
+        <a href="{{ url_for('collection_items', collection_name=collection.name) }}">
+            {{ collection.name }}
+        </a>
+        <a href="{{ url_for('collection_items', collection_name=collection.name) }}">
+            <img src="https://image.tmdb.org/t/p/original{{ collection.poster_path }}" alt="{{ collection.name }}"
+                width="50"></a>
+    </li>
+    {% endfor %}
+</ul>
+
+
+{% endblock %}

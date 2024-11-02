@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results - Yellow Bucket{% endblock %}
+
+{% block body %}
+<h1>Search Results</h1>
+<ul>
+    {% for movie in movies %}
+    <li>
+        <a href="{{ url_for('movie_detail', movie_id=movie.id) }}">{{ movie.title }}</a>
+        <img src="https://image.tmdb.org/t/p/original{{ movie.poster_path }}" alt="movie poster" width="50">
+    </li>
+    {% endfor %}
+</ul>
+
+<button onclick="history.back()">Back to previous page</button>
+{% endblock %}
