@@ -6,7 +6,8 @@
 <h1 class="title">Kiosks</h1>
 <ul>
     {% for kiosk in kiosks %}
-    <li>ID: {{ kiosk.id }} - Address: {{ kiosk.address }}</li>
+    <li><a href="{{ url_for('kiosk_disks', kiosk_id=kiosk.id) }}">ID: {{ kiosk.id }} - Address: {{ kiosk.address }}</a>
+    </li>
     {% endfor %}
 </ul>
 {% endblock %}
