@@ -20,14 +20,6 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
 
-# Credentials depend on how you set up the database
-user = 'yellowbox_user'
-password = 'password'
-host = 'localhost'
-port = '3306'
-database = 'yellowbox_db'
-
-
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{user}:{password}@{host}:{port}/{database}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -364,5 +356,8 @@ def success_add():
     return render_template('success_add.html', movie_title=movie_title, location=location)
 
 
+with app.app_context():
+    db.create_all()
+    
 if __name__ == "__main__":
     app.run(debug=True)
