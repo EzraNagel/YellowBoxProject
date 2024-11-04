@@ -83,7 +83,8 @@ class Credit(db.Model):
     id = db.Column(BigInteger, primary_key=True)
     cast = db.Column(Text, nullable=True)
     crew = db.Column(Text, nullable=True)
-
+    def __repr__(self):
+        return f"ID(id={self.id})>"
     
 class User(db.Model):
     __tablename__ = 'users'
@@ -93,29 +94,6 @@ class User(db.Model):
     email = db.Column(db.String(255), nullable=False)
     def __repr__(self):
         return f"User(id={self.id})>"
-
-    
-class Disk(db.Model):
-    __tablename__ = "disks"
-    id = db.Column(BigInteger, primary_key=True)
-    movieId = db.Column(BigInteger, nullable=False)
-    location = db.Column(db.Integer, nullable=True)
-    condition = db.Column(db.String(255), nullable=True)
-    
-    def __repr__(self):
-        return f"<Credit(id={self.id})>"
-
-
-class User(db.Model):
-    __tablename__ = 'users'
-
-    id = db.Column(BigInteger, primary_key=True)
-    username = db.Column(String(50), nullable=False)
-    password = db.Column(String(255), nullable=False)
-    email = db.Column(String(100), nullable=False)
-
-    def __repr__(self):
-        return f"<User(id={self.id})>"
 
 
 class Disk(db.Model):
@@ -385,26 +363,6 @@ def success_add():
 
     return render_template('success_add.html', movie_title=movie_title, location=location)
 
-
-if __name__ == "__main__":
-    with app.app_context():
-        db.create_all() 
-        return f"<Disk(id={self.id})>"
-    
-class Order(db.Model):
-    __tablename__ = "orders"
-    id = db.Column(BigInteger, primary_key=True)
-    movieId = db.Column(BigInteger, nullable=False)
-    customerId = db.Column(BigInteger, nullable=False)
-    checkoutDate = db.Column(db.BigInteger, nullable=False)
-    returnDate = db.Column(db.BigInteger, nullable=False)
-    rating = db.Column(db.Float, nullable=True)
-    review = db.Column(JSON, nullable=True)
-    def __repr__(self):
-        return f"<Order(id={self.id})>"
-
-with app.app_context():
-    db.create_all()
 
 if __name__ == "__main__":
     app.run(debug=True)
