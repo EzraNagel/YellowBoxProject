@@ -287,72 +287,61 @@ def movie_detail(movie_id):
     return render_template('movie_detail.html', movie=movie)
 
 
-@app.route('/kiosks')
-def kiosks():
+@app.route('/new_customer', methods=['GET', 'POST'])
+def new_customer():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        email = request.form.get('email')
 
-    kiosks = db.session.query(Kiosk).all()
-    return render_template('kiosks.html', kiosks=kiosks)
+        if not username or not password or not email:
+            return "All fields are required", 400
 
-@app.route('/kiosk/<int:kiosk_id>')
-def kiosk_disks(kiosk_id):
-    kiosk = db.session.query(Kiosk).get(kiosk_id)
-    if kiosk is None:
-        flash("Kiosk not found.")
-        return redirect(url_for('kiosks'))
+        new_user = User(username=username, password=password, email=email)
 
-    disks = db.session.query(Disk.id, Disk.condition, Movie.title).join(Movie, Disk.movieId == Movie.id).filter(Disk.location == kiosk_id).all()
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for('base'))
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error adding customer: {e}")
+            return "There was an issue adding the customer"
 
-    return render_template('kiosk_disks.html', kiosk=kiosk, disks=disks)
+    return render_template('new_customer.html')
 
+@app.route('/update_customer/<int:customer_id>', methods=['GET', 'POST'])
+def update_customer(customer_id):
+    customer = User.query.get_or_404(customer_id)
 
-# This would be connected to a button next each disks on the kiosk disk page that would pass the discs id to remove it
-# but for some reason the ids aren't being assigned when they are added so it doesnt work
-@app.route('/remove_disk/<int:disk_id>', methods=['POST'])
-def remove_disk(disk_id):
-    disk = Disk.query.get(disk_id)
-    db.session.delete(disk)
-    db.session.commit()
-    return redirect(url_for('kiosk_disks', kiosk_id=disk.location))
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        email = request.form.get('email')
 
+        if not username or not email:
+            return "Username and email are required", 400
 
-@app.route('/DVDs')
-def DVDs():
-    condition_options = ['New', 'Good', 'Fair', 'Poor']
-    disks = db.session.query(Disk.id, Disk.condition, Movie.title, Kiosk.address).join(Movie, Disk.movieId == Movie.id).join(Kiosk, Disk.location == Kiosk.id).all()
-    movies = db.session.query(Movie).all()
-    kiosks = db.session.query(Kiosk).all()
-    
-    return render_template('DVDs.html', disks = disks, movies=movies, kiosks=kiosks, condition_options=condition_options)
+        customer.username = username
+        customer.password = password
+        customer.email = email
 
+        try:
+            db.session.commit()
+            return redirect(url_for('base'))
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error updating customer: {e}")
+            return "There was an issue updating the customer", 500
 
-@app.route('/add_disk', methods=['POST'])
-def add_disk():
-    movie_id = request.form.get('movieId')
-    location_id = request.form.get('location', None)
-    condition = request.form.get('condition', None)
-
-    new_disk = Disk(
-        movieId=int(movie_id),
-        location=int(location_id) if location_id else None,
-        condition=condition
-    )
-    
-
-    db.session.add(new_disk)
-    db.session.commit()
-
-    movie = db.session.query(Movie).filter_by(id=movie_id).first()
-    kiosk = db.session.query(Kiosk).filter_by(id=location_id).first()
-    
-    return redirect(url_for('success_add', movie_title=movie.title, kiosk_address=kiosk.address))
+    return render_template('update_customer.html', customer=customer)
 
 
-@app.route('/success_add')
-def success_add():
-    movie_title = request.args.get('movie_title')
-    location = request.args.get('kiosk_address')
+@app.route('/view_customer/<int:customer_id>', methods=['GET'])
+def view_customer(customer_id):
+    customer = User.query.get_or_404(customer_id)
 
-    return render_template('success_add.html', movie_title=movie_title, location=location)
+    return render_template('view_customer.html', customer=customer)
 
 
 if __name__ == "__main__":
