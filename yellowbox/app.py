@@ -3,8 +3,9 @@ import sys
 from flask import Flask, render_template, request, url_for, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 import json
-
 from sqlalchemy import *
+from sqlalchemy import BigInteger, JSON, Text, Date, Float
+
 
 
 # Database credentials
@@ -15,7 +16,9 @@ port = '3306'
 database = 'yellowbox_db'
 
 app = Flask(__name__)
+
 app.secret_key = os.urandom(24)
+
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{user}:{password}@{host}:{port}/{database}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -48,6 +51,7 @@ class Movie(db.Model):
     vote_average = db.Column(Float, nullable=True)
     vote_count = db.Column(Integer, nullable=True)
 
+
     def __repr__(self):
         return f"<Movie(title={self.title}, id={self.id})>"
 
@@ -64,27 +68,24 @@ class Rating(db.Model):
         return f"<Rating(movieId={self.movieId}, rating={self.rating})>"
 
 
+
 class Credit(db.Model):
     __tablename__ = 'credits'
     
     id = db.Column(BigInteger, primary_key=True)
     cast = db.Column(Text, nullable=True)
     crew = db.Column(Text, nullable=True)
-    
     def __repr__(self):
-        return f"<Credit(id={self.id})>"
-
-
+        return f"ID(id={self.id})>"
+    
 class User(db.Model):
     __tablename__ = 'users'
-
     id = db.Column(BigInteger, primary_key=True)
-    username = db.Column(String(50), nullable=False)
-    password = db.Column(String(255), nullable=False)
-    email = db.Column(String(100), nullable=False)
-
+    username = db.Column(db.String(255), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), nullable=False)
     def __repr__(self):
-        return f"<User(id={self.id})>"
+        return f"User(id={self.id})>"
 
 
 class Disk(db.Model):
@@ -285,6 +286,74 @@ def movies_search_results():
 def movie_detail(movie_id):
     movie = Movie.query.get_or_404(movie_id)  
     return render_template('movie_detail.html', movie=movie)
+
+
+@app.route('/kiosks')
+def kiosks():
+
+    kiosks = db.session.query(Kiosk).all()
+    return render_template('kiosks.html', kiosks=kiosks)
+
+@app.route('/kiosk/<int:kiosk_id>')
+def kiosk_disks(kiosk_id):
+    kiosk = db.session.query(Kiosk).get(kiosk_id)
+    if kiosk is None:
+        flash("Kiosk not found.")
+        return redirect(url_for('kiosks'))
+
+    disks = db.session.query(Disk.id, Disk.condition, Movie.title).join(Movie, Disk.movieId == Movie.id).filter(Disk.location == kiosk_id).all()
+
+    return render_template('kiosk_disks.html', kiosk=kiosk, disks=disks)
+
+
+# This would be connected to a button next each disks on the kiosk disk page that would pass the discs id to remove it
+# but for some reason the ids aren't being assigned when they are added so it doesnt work
+@app.route('/remove_disk/<int:disk_id>', methods=['POST'])
+def remove_disk(disk_id):
+    disk = Disk.query.get(disk_id)
+    db.session.delete(disk)
+    db.session.commit()
+    return redirect(url_for('kiosk_disks', kiosk_id=disk.location))
+
+
+@app.route('/DVDs')
+def DVDs():
+    condition_options = ['New', 'Good', 'Fair', 'Poor']
+    disks = db.session.query(Disk.id, Disk.condition, Movie.title, Kiosk.address).join(Movie, Disk.movieId == Movie.id).join(Kiosk, Disk.location == Kiosk.id).all()
+    movies = db.session.query(Movie).all()
+    kiosks = db.session.query(Kiosk).all()
+    
+    return render_template('DVDs.html', disks = disks, movies=movies, kiosks=kiosks, condition_options=condition_options)
+
+
+@app.route('/add_disk', methods=['POST'])
+def add_disk():
+    movie_id = request.form.get('movieId')
+    location_id = request.form.get('location', None)
+    condition = request.form.get('condition', None)
+
+    new_disk = Disk(
+        movieId=int(movie_id),
+        location=int(location_id) if location_id else None,
+        condition=condition
+    )
+    
+
+    db.session.add(new_disk)
+    db.session.commit()
+
+    movie = db.session.query(Movie).filter_by(id=movie_id).first()
+    kiosk = db.session.query(Kiosk).filter_by(id=location_id).first()
+    
+    return redirect(url_for('success_add', movie_title=movie.title, kiosk_address=kiosk.address))
+
+
+@app.route('/success_add')
+def success_add():
+    movie_title = request.args.get('movie_title')
+    location = request.args.get('kiosk_address')
+
+    return render_template('success_add.html', movie_title=movie_title, location=location)
 
 
 @app.route('/new_customer', methods=['GET', 'POST'])
