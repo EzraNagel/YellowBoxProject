@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% block title %}Yellow Bucket{% endblock %}</title>
+</head>
+<header>
+    {% include 'navbar.html' %}
+</header>
+
+<body>
+    <section class="section">
+        <div class="container">
+            <main>
+                {% block body %}
+                <h1>Customer Details</h1>
+                <p><strong>Customer ID:</strong> {{ customer.id }}</p>
+                <p><strong>Username:</strong> {{ customer.username }}</p>
+                <p><strong>Email:</strong> {{ customer.email }}</p>
+                {% endblock %}
+            </main>
+        </div>
+        <div>
+            <a href="{{ url_for('update_customer', customer_id=customer.id) }}">Edit Customer</a>
+        </div>
+    </section>
+    {% include 'footer.html' %}
+</body>
+</html>

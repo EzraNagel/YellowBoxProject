@@ -146,7 +146,6 @@ def base():
     return render_template('base.html', movies=top_movies, collections=parsed_collections)
 
 
-
 @app.route('/movies')
 def movies():
     movie_list = Movie.query.all()
@@ -182,24 +181,68 @@ def movies_search_results():
     return render_template('movies_search_results.html', movies=movies)
 
 
-
-
 @app.route('/movie/<int:movie_id>')
 def movie_detail(movie_id):
     movie = Movie.query.get_or_404(movie_id)  
     return render_template('movie_detail.html', movie=movie)
 
-@app.route('/kiosks')
-def kiosks():
+
+@app.route('/new_customer', methods=['GET', 'POST'])
+def new_customer():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        email = request.form.get('email')
+
+        if not username or not password or not email:
+            return "All fields are required", 400
+
+        new_user = User(username=username, password=password, email=email)
+
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for('base'))
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error adding customer: {e}")
+            return "There was an issue adding the customer"
+
+    return render_template('new_customer.html')
+
+@app.route('/update_customer/<int:customer_id>', methods=['GET', 'POST'])
+def update_customer(customer_id):
+    customer = User.query.get_or_404(customer_id)
+
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        email = request.form.get('email')
+
+        if not username or not email:
+            return "Username and email are required", 400
+
+        customer.username = username
+        customer.password = password
+        customer.email = email
+
+        try:
+            db.session.commit()
+            return redirect(url_for('base'))
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error updating customer: {e}")
+            return "There was an issue updating the customer", 500
+
+    return render_template('update_customer.html', customer=customer)
 
 
-    return render_template('kiosks.html')
+@app.route('/view_customer/<int:customer_id>', methods=['GET'])
+def view_customer(customer_id):
+    customer = User.query.get_or_404(customer_id)
 
-@app.route('/DVDs')
-def DVDs():
+    return render_template('view_customer.html', customer=customer)
 
-
-    return render_template('DVDs.html')
 
 if __name__ == "__main__":
     with app.app_context():
