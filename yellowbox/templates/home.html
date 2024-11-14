@@ -8,13 +8,19 @@
 <div class="title"><strong>Top 20 Movies:</strong></div>
 <ul class="movie-grid">
     {% for movie, average_rating in movies %}
-    <li class="movie-item"><a href="{{ url_for('movie_detail', movie_id=movie.id) }}">{{ movie.title }} - Average
-            Rating:
-            {{ average_rating | round(2) }}</a> <a href="{{ url_for('movie_detail', movie_id=movie.id) }}"><img
-                src="https://image.tmdb.org/t/p/original{{ movie.poster_path }}" alt="movie poster" width="50"></a></li>
+    <li class="movie-item">
+        <a href="{{ url_for('movie_detail', movie_id=movie.id) }}">
+            <img src="https://image.tmdb.org/t/p/w154{{ movie.poster_path }}" alt="movie poster">
+            <div class="movie-info">
+                <p>{{ movie.title }}</p>
+                <p>Average Rating: {{ average_rating | round(2) }}</p>
+            </div>
+        </a>
+    </li>
     {% endfor %}
 </ul>
 <br />
+
 <h2 class="title">Search for Movies</h2>
 <h5>Select search criteria below or leave all fields blank to view all movies</h5>
 <br />
@@ -50,19 +56,16 @@
     <button type="submit">Search</button>
 </form>
 <br />
+
 <h1 class="title"><strong>All Collections:</strong></h1>
 <ul class="movie-grid">
     {% for collection in collections %}
     <li class="movie-item">
         <a href="{{ url_for('collection_items', collection_name=collection.name) }}">
-            {{ collection.name }}
+            <img src="https://image.tmdb.org/t/p/w154{{ collection.poster_path }}" alt="{{ collection.name }}">
+            <p>{{ collection.name }}</p>
         </a>
-        <a href="{{ url_for('collection_items', collection_name=collection.name) }}">
-            <img src="https://image.tmdb.org/t/p/original{{ collection.poster_path }}" alt="{{ collection.name }}"
-                width="50"></a>
     </li>
     {% endfor %}
 </ul>
-
-
 {% endblock %}

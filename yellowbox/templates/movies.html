@@ -13,10 +13,10 @@
         <ul class="movie-grid">
             {% for movie in movies %}
             <li class="movie-item">
-                <a href="{{ url_for('movie_detail', movie_id=movie.id) }}">{{ movie.title }}</a>
-                <img src="https://image.tmdb.org/t/p/original{{ movie.poster_path }}"
-                    href="{{ url_for('movie_detail', movie_id=movie.id) }}" alt="{{ movie.title }} poster">
-
+                <a href="{{ url_for('movie_detail', movie_id=movie.id) }}">
+                    <img src="https://image.tmdb.org/t/p/w154{{ movie.poster_path }}" alt="{{ movie.title }} poster">
+                    <p>{{ movie.title }}</p>
+                </a>
             </li>
             {% endfor %}
         </ul>

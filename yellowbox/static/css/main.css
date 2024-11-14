@@ -39047,18 +39047,51 @@ footer {
 
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 20px;
+  padding: 0;
+  list-style: none;
 }
 
 .movie-item {
   text-align: center;
 }
 
+.movie-item a {
+  text-decoration: none;
+  color: inherit;
+}
+
 .movie-item img {
   width: 100%;
   max-width: 150px;
   height: auto;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.movie-item img:hover {
+  transform: scale(1.05);
+}
+
+.movie-item p {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.movie-details {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.movie-details img {
+  max-width: 300px;
+  border-radius: 8px;
+}
+
+.movie-info {
+  flex: 1;
 }
 
 /*# sourceMappingURL=main.css.map */
