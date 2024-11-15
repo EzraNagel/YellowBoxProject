@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}User List - Yellow Bucket{% endblock %}
+
+{% block body %}
+<section class="section">
+    <div class="container">
+        <a href="/new_customer">
+            <h1 class="title">Add a Customer</h1>
+        </a>
+
+        <h1 class="title">All Customers</h1>
+        <ol>
+            {% for user in users %}
+            <li>
+
+                <a href="{{ url_for('view_customer', customer_id=user.id) }}">
+                    <p>{{ user.username }}</p>
+                </a>
+            </li>
+            {% endfor %}
+        </ol>
+    </div>
+</section>
+{% endblock %}

@@ -412,6 +412,11 @@ def view_customer(customer_id):
 
     return render_template('view_customer.html', customer=customer)
 
+@app.route('/all_customers', methods=['GET'])
+def all_customers():
+    users = db.session.query(User).all()
+    return render_template('all_customers.html', users=users)
+
 
 if __name__ == "__main__":
     with app.app_context():
