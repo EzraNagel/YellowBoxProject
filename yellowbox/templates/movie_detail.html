@@ -1,28 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ movie.title }} - Yellow Bucket</title>
-</head>
+{% block title %}{{ movie.title }} - Yellow Bucket{% endblock %}
 
-<header>
-    {% include 'navbar.html' %}
-</header>
+{% block body %}
+<button onclick="history.back()">Back to previous page</button>
+<section class="section">
+    <div class="container">
+        <div class="movie-details">
+            <img src="https://image.tmdb.org/t/p/w342{{ movie.poster_path }}" alt="{{ movie.title }}" loading="lazy">
 
-<body>
-    <section class="section">
-        <div class="container">
-            <h1 class="title">{{ movie.title }}</h1>
-            <img src="https://image.tmdb.org/t/p/original{{ movie.poster_path }}" alt="{{ movie.title }}">
-            <p><strong>Overview:</strong> {{ movie.overview }}</p>
-            <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
-            <p><strong>Rating:</strong> {{ movie.vote_average }}</p>
-            <button onclick="history.back()">Back to previous page</button>
+            <div class="movie-info">
+                <h1 class="title">{{ movie.title }}</h1>
+                <p><strong>Overview:</strong> {{ movie.overview }}</p>
+                <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
+                <p><strong>Rating:</strong> {{ movie.vote_average }}</p>
+                <a href="{{ url_for('edit_movie', movie_id=movie.id) }}">
+                    <button>Edit Movie</button>
+                </a>
+            </div>
         </div>
-    </section>
-    {% include 'footer.html' %}
-</body>
-
-</html>
+    </div>
+</section>
+{% endblock %}
