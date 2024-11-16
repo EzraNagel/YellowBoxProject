@@ -11,12 +11,42 @@
 
         <h1 class="title">All Customers</h1>
         <ol>
-            {% for user in users %}
+            {% for data in customer_data %}
             <li>
 
-                <a href="{{ url_for('view_customer', customer_id=user.id) }}">
-                    <p>{{ user.username }}</p>
+                <!-- Corrected customer link -->
+                <a href="{{ url_for('view_customer', customer_id=data.customer.id) }}">
+                    <p>{{ data.customer.username }}</p>
                 </a>
+
+                <h3>Current Rentals</h3>
+                {% if data.current_rentals %}
+                <ul>
+                    {% for order, movie in data.current_rentals %}
+                    <li>
+                        <strong>{{ movie.title }}</strong>
+                        (Checkout Date: {{ order.checkoutDate | datetimeformat }})
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>No current rentals.</p>
+                {% endif %}
+
+                <h3>Rental History</h3>
+                {% if data.rental_history %}
+                <ul>
+                    {% for order, movie in data.rental_history %}
+                    <li>
+                        <strong>{{ movie.title }}</strong>
+                        (Checkout Date: {{ order.checkoutDate | datetimeformat }},
+                        Return Date: {{ order.returnDate | datetimeformat }})
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>No rental history.</p>
+                {% endif %}
             </li>
             {% endfor %}
         </ol>

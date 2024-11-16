@@ -13,6 +13,8 @@
                 <th>Movie Title</th>
                 <th>Customer ID</th>
                 <th>Kiosk Location</th>
+                <th>Checkout Date</th>
+                <th>Return Date</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -20,9 +22,15 @@
             {% for order in orders %}
             <tr>
                 <td>{{ order.id }}</td>
-                <td>{{ order.movie.title }}</td> <!-- Display movie title -->
+                <td>{{ order.movie.title }}</td>
                 <td>{{ order.customerId }}</td>
                 <td>{{ order.kioskLocation }}</td>
+
+                <!-- Format checkout date -->
+                <td>{{ order.checkoutDate | datetimeformat if order.checkoutDate else 'N/A' }}</td>
+
+                <!-- Format return date -->
+                <td>{{ order.returnDate | datetimeformat if order.returnDate else 'Not returned' }}</td>
 
                 <td>
                     {% if not order.returnDate %}

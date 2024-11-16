@@ -410,7 +410,26 @@ def view_customer(customer_id):
 @app.route('/all_customers', methods=['GET'])
 def all_customers():
     users = db.session.query(User).all()
-    return render_template('all_customers.html', users=users)
+    customer_data = []
+    for user in users:
+        current_rentals = (
+            db.session.query(Order, Movie)
+            .join(Movie, Order.movieId == Movie.id)
+            .filter(Order.customerId == user.id, Order.returnDate == 0)
+            .all()
+        )
+        rental_history = (
+            db.session.query(Order, Movie)
+            .join(Movie, Order.movieId == Movie.id)
+            .filter(Order.customerId == user.id, Order.returnDate > 0)
+            .all()
+        )
+        customer_data.append({
+            "customer": user,
+            "current_rentals": current_rentals,
+            "rental_history": rental_history
+        })
+    return render_template('all_customers.html', customer_data=customer_data)
 
 @app.route('/rental_history/<int:movie_id>')
 def rental_history(movie_id):
@@ -468,13 +487,16 @@ def return_movie(order_id):
 def orders():
     orders = Order.query.all()
 
-    # For each order, fetch the associated movie using the movieId
     for order in orders:
-        order.movie = Movie.query.get(order.movieId)  # Fetch the movie by movieId
+        order.movie = Movie.query.get(order.movieId)
 
     return render_template('orders.html', orders=orders)
 
-
+@app.template_filter('datetimeformat')
+def datetimeformat(value):
+    if value:
+        return datetime.utcfromtimestamp(value).strftime('%Y-%m-%d %H:%M:%S')
+    return 'N/A'
 
 if __name__ == "__main__":
     with app.app_context():
