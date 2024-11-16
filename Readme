@@ -14,12 +14,15 @@ Create mysql database if not done already:
     GRANT ALL PRIVILEGES ON yellowbox_db.* TO 'yellowbox_user'@'localhost';
     FLUSH PRIVILEGES;
 
-Create Tables:
+Create Tables and Run:
     cd yellowbox
     python app.py
-    python importTables.py
+    exit running app
+    python createTables.py
+    python app.py
 
-Check if worked:
-    python testData.py
+If messed up:
+    python clearTables.py
+
     
     
