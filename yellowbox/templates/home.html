@@ -7,13 +7,13 @@
 
 <div class="title"><strong>Top 20 Movies:</strong></div>
 <ul class="movie-grid">
-    {% for movie, average_rating in movies %}
+    {% for movie in movies %}
     <li class="movie-item">
         <a href="{{ url_for('movie_detail', movie_id=movie.id) }}">
             <img src="https://image.tmdb.org/t/p/w154{{ movie.poster_path }}" alt="movie poster">
             <div class="movie-info">
                 <p>{{ movie.title }}</p>
-                <p>Average Rating: {{ average_rating | round(2) }}</p>
+                <p>Average Rating: {{ movie.vote_average }}</p>
             </div>
         </a>
     </li>

@@ -1,1 +1,7 @@
 ﻿id,movieId,customerId,checkoutDate,returnDate,rating,review
+1,11,1,1636245600,1636332000,5,"Great movie, loved it!"
+2,12,2,1636332000,1636428400,4,"Really enjoyed it, but could be better."
+3,13,3,1636418400,1637425600,3,"It was okay, not the best."
+4,11,2,1636504800,1636591200,5,"My all-time favorite!"
+5,13,1,1636591200,1636677600,4,"Good movie, worth watching."
+6,12,3,1636677600,1637680000,3,"It was okay, not the best."

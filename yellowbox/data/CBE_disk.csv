@@ -1,2 +1,9 @@
-﻿id,movieId,location,condition
-1,11,1,'New'
+﻿id,movieId,location,condition,status
+1,11,1,"Good",True
+2,12,1,"Good",True
+3,11,2,"Fair",False
+4,12,2,"Good",False
+5,13,3,"Excellent",False
+6,13,4,"Fair",False
+7,11,3,"Good",False
+8,12,4,"Fair",False
