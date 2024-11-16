@@ -5,25 +5,21 @@ from flask_sqlalchemy import SQLAlchemy
 import json
 from sqlalchemy import *
 from sqlalchemy import BigInteger, JSON, Text, Date, Float
+from datetime import datetime
 
 
 
-# Database credentials
-user = 'yellowbox_user'
-password = 'password'
-host = 'localhost'
-port = '3306'
-database = 'yellowbox_db'
+db = SQLAlchemy()
 
+# Define your app
 app = Flask(__name__)
 
-app.secret_key = os.urandom(24)
-
-
-app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{user}:{password}@{host}:{port}/{database}'
+# Configure your database URI
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://yellowbox_user:password@localhost:3306/yellowbox_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
+# Initialize the database with the app
+db.init_app(app)
 
 ## Database Table Models
 
@@ -36,8 +32,8 @@ class Movie(db.Model):
     genres = db.Column(Text, nullable=True)
     homepage = db.Column(String(255), nullable=True)
     imdb_id = db.Column(String(10), nullable=True)
-    original_language = db.Column(String(2), nullable=False)
-    original_title = db.Column(String(255), nullable=False)
+    original_language = db.Column(String(2), nullable=True)
+    original_title = db.Column(String(255), nullable=True)
     overview = db.Column(Text, nullable=True)
     popularity = db.Column(Float, nullable=True)
     poster_path = db.Column(String(255), nullable=True)
@@ -59,8 +55,8 @@ class Movie(db.Model):
 class Rating(db.Model):
     __tablename__ = 'ratings'
     
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    movieId = db.Column(BigInteger, nullable=True)
+    id = db.Column(BigInteger, primary_key=True, autoincrement=True)
+    movieId = db.Column(BigInteger, nullable=False)  
     rating = db.Column(Float, nullable=True)
     timestamp = db.Column(BigInteger, nullable=True)
 
@@ -81,38 +77,40 @@ class Credit(db.Model):
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(BigInteger, primary_key=True)
-    username = db.Column(db.String(255), nullable=False)
-    password = db.Column(db.String(255), nullable=False)
-    email = db.Column(db.String(255), nullable=False)
+    username = db.Column(String(255), nullable=False)
+    password = db.Column(String(255), nullable=False)
+    email = db.Column(String(255), nullable=False)
+
     def __repr__(self):
-        return f"User(id={self.id})>"
+        return f"<User(id={self.id}, username={self.username})>"
 
 
 class Disk(db.Model):
-    __tablename__ = "disks"
+    __tablename__ = 'disks'
 
     id = db.Column(BigInteger, primary_key=True, autoincrement=True)
     movieId = db.Column(BigInteger, nullable=False)
     location = db.Column(Integer, nullable=True)
     condition = db.Column(String(50), nullable=True)
+    status = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return f"<Disk(id={self.id}, movieId={self.movieId}, location={self.location}, condition={self.condition})>"
 
 
 class Order(db.Model):
-    __tablename__ = "orders"
+    __tablename__ = 'orders'
 
     id = db.Column(BigInteger, primary_key=True)
     movieId = db.Column(BigInteger, nullable=False)
     customerId = db.Column(BigInteger, nullable=False)
     checkoutDate = db.Column(BigInteger, nullable=False)
-    returnDate = db.Column(BigInteger, nullable=False)
+    returnDate = db.Column(BigInteger, nullable=True)
     rating = db.Column(Float, nullable=True)
     review = db.Column(Text, nullable=True)
 
     def __repr__(self):
-        return f"<Order(id={self.id})>"
+        return f"<Order(id={self.id}, movieId={self.movieId}, customerId={self.customerId})>"
 
 
 class Kiosk(db.Model):
@@ -124,20 +122,17 @@ class Kiosk(db.Model):
     def __repr__(self):
         return f"<Kiosk(id={self.id}, address={self.address})>"
 
-
 ## App routes
 
 @app.route('/')
 def base():
 
     top_movies = db.session.query(
-        Movie,
-        db.func.avg(Rating.rating).label('average_rating')
-    ).join(Rating, Movie.id == Rating.movieId, isouter=True)
-    top_movies = top_movies.group_by(Movie.id).order_by(db.desc('average_rating')).limit(20).all()
-    
+        Movie
+    ).order_by(db.desc(Movie.vote_average)).limit(20).all()
+
     collections = db.session.query(Movie.belongs_to_collection).distinct().all()
-    
+
     parsed_collections = []
     for collection_json, in collections:
         if collection_json:
@@ -149,9 +144,9 @@ def base():
                 })
             except json.JSONDecodeError:
                 pass
-    
-                
+
     return render_template('home.html', movies=top_movies, collections=parsed_collections)
+
 
 
 @app.route('/movies')
@@ -284,9 +279,11 @@ def movies_search_results():
 
 @app.route('/movie/<int:movie_id>')
 def movie_detail(movie_id):
-    movie = Movie.query.get_or_404(movie_id)  
-    return render_template('movie_detail.html', movie=movie)
+    movie = db.session.query(Movie).get(movie_id)
+    available_discs = db.session.query(Disk).filter_by(movieId=movie_id, status='available').all()
+    kiosks = Kiosk.query.all()
 
+    return render_template('movie_detail.html', movie=movie, available_discs=available_discs, kiosks=kiosks)
 
 @app.route('/kiosks')
 def kiosks():
@@ -298,7 +295,6 @@ def kiosks():
 def kiosk_disks(kiosk_id):
     kiosk = db.session.query(Kiosk).get(kiosk_id)
     if kiosk is None:
-        flash("Kiosk not found.")
         return redirect(url_for('kiosks'))
 
     disks = db.session.query(Disk.id, Disk.condition, Movie.title).join(Movie, Disk.movieId == Movie.id).filter(Disk.location == kiosk_id).all()
@@ -306,8 +302,6 @@ def kiosk_disks(kiosk_id):
     return render_template('kiosk_disks.html', kiosk=kiosk, disks=disks)
 
 
-# This would be connected to a button next each disks on the kiosk disk page that would pass the discs id to remove it
-# but for some reason the ids aren't being assigned when they are added so it doesnt work
 @app.route('/remove_disk/<int:disk_id>', methods=['POST'])
 def remove_disk(disk_id):
     disk = Disk.query.get(disk_id)
@@ -356,8 +350,154 @@ def success_add():
     return render_template('success_add.html', movie_title=movie_title, location=location)
 
 
-with app.app_context():
-    db.create_all()
+@app.route('/new_customer', methods=['GET', 'POST'])
+def new_customer():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        email = request.form.get('email')
+
+        if not username or not password or not email:
+            return "All fields are required", 400
+
+        new_user = User(username=username, password=password, email=email)
+
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for('base'))
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error adding customer: {e}")
+            return "There was an issue adding the customer"
+
+    return render_template('new_customer.html')
+
+@app.route('/update_customer/<int:customer_id>', methods=['GET', 'POST'])
+def update_customer(customer_id):
+    customer = User.query.get_or_404(customer_id)
+
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        email = request.form.get('email')
+
+        if not username or not email:
+            return "Username and email are required", 400
+
+        customer.username = username
+        customer.password = password
+        customer.email = email
+
+        try:
+            db.session.commit()
+            return redirect(url_for('users'))
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error updating customer: {e}")
+            return "There was an issue updating the customer", 500
+
+    return render_template('update_customer.html', customer=customer)
+
+
+@app.route('/view_customer/<int:customer_id>', methods=['GET'])
+def view_customer(customer_id):
+    customer = User.query.get_or_404(customer_id)
+
+    return render_template('view_customer.html', customer=customer)
+
+@app.route('/all_customers', methods=['GET'])
+def all_customers():
+    users = db.session.query(User).all()
+    customer_data = []
+    for user in users:
+        current_rentals = (
+            db.session.query(Order, Movie)
+            .join(Movie, Order.movieId == Movie.id)
+            .filter(Order.customerId == user.id, Order.returnDate == 0)
+            .all()
+        )
+        rental_history = (
+            db.session.query(Order, Movie)
+            .join(Movie, Order.movieId == Movie.id)
+            .filter(Order.customerId == user.id, Order.returnDate > 0)
+            .all()
+        )
+        customer_data.append({
+            "customer": user,
+            "current_rentals": current_rentals,
+            "rental_history": rental_history
+        })
+    return render_template('all_customers.html', customer_data=customer_data)
+
+@app.route('/rental_history/<int:movie_id>')
+def rental_history(movie_id):
+    rentals = db.session.query(
+        Order,
+        User.id,
+        Kiosk.address
+    ).join(User, Order.customerId == User.id) \
+     .join(Kiosk, Order.movieId == movie_id) \
+     .filter(Order.movieId == movie_id).all()
+
+    movie = Movie.query.get_or_404(movie_id)
+    return render_template('rental_history.html', rentals=rentals, movie=movie)
+
+from flask import request, redirect, url_for
+from datetime import datetime
+
+@app.route('/rent_movie/<int:movie_id>', methods=['POST'])
+def rent_movie(movie_id):
+    customer_id = request.form.get('customer_id')
+    disc_id = request.form.get('disc_id')  
+
+    disk = db.session.query(Disk).filter_by(id=disc_id, movieId=movie_id, status='available').first()
+
+    if not disk:
+        return redirect(url_for('DVDs'))
+
+    new_order = Order(
+        movieId=movie_id,
+        customerId=customer_id,
+        checkoutDate=int(datetime.utcnow().timestamp()),
+        returnDate=None, 
+    )
+
+    db.session.add(new_order)
+    db.session.commit()
+
+    disk.status = True  
+    db.session.commit()
+
+    return redirect(url_for('orders'))
+
+
+@app.route('/return_movie/<int:order_id>', methods=['POST'])
+def return_movie(order_id):
+    order = Order.query.get_or_404(order_id)
+    order.returnDate = int(datetime.utcnow().timestamp())
+
+    db.session.commit()
     
+    return redirect(url_for('view_customer', customer_id=order.customerId))
+
+
+@app.route('/orders', methods=['GET'])
+def orders():
+    orders = Order.query.all()
+
+    for order in orders:
+        order.movie = Movie.query.get(order.movieId)
+
+    return render_template('orders.html', orders=orders)
+
+@app.template_filter('datetimeformat')
+def datetimeformat(value):
+    if value:
+        return datetime.utcfromtimestamp(value).strftime('%Y-%m-%d %H:%M:%S')
+    return 'N/A'
+
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all() 
     app.run(debug=True)
