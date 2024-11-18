@@ -14,12 +14,16 @@ Create mysql database if not done already:
     GRANT ALL PRIVILEGES ON yellowbox_db.* TO 'yellowbox_user'@'localhost';
     FLUSH PRIVILEGES;
 
-Create Tables:
-    cd yellowbox
+Set up tables:
     python app.py
-    python importTables.py
+    quit
+If in Powershell:
+    Get-Content yellowbox_db.sql | mysql -u yellowbox_user -p yellowbox_db    
+Command Line:
+    mysql -u yellowbox_user -p yellowbox_db < yellowbox_db.sql
 
-Check if worked:
-    python testData.py
+    python app.py
+
+
     
     
