@@ -1,0 +1,14 @@
+<nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+  <div class="navbar-menu">
+    <div class="navbar-start">
+      <a href="/" class="navbar-item">Home</a>
+      <a href="{{ url_for('movies.movies_view') }}" class="navbar-item">Movies</a>
+      <a href="{{ url_for('kiosks.DVDs') }}" class="navbar-item">DVDs</a>
+      <a href="{{ url_for('kiosks.kiosks_view') }}" class="navbar-item">Kiosks</a>
+      <a href="{{ url_for('customers.all_customers') }}" class="navbar-item">Users</a>
+      <a href="{{ url_for('orders.orders') }}" class="navbar-item">Orders</a>
+
+    </div>
+
+  </div>
+</nav>

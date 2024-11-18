@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Disks in {{ kiosk.address }} - Yellow Bucket{% endblock %}
+
+{% block body %}
+<h1 class="title">Disks in {{ kiosk.address }}</h1>
+<ul>
+    {% for disk_id, condition, title in disks %}
+    <li>Disk ID: {{ disk_id }}, Condition: {{ condition }}, Title: {{ title }}</li>
+    {% endfor %}
+</ul>
+<a href="{{ url_for('kiosks.kiosks_view') }}">Back to Kiosks</a>
+{% endblock %}

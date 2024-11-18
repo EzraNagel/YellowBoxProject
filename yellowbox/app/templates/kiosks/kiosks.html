@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Kiosks - Yellow Bucket{% endblock %}
+
+{% block body %}
+<h1 class="title">Kiosks</h1>
+<ul>
+    {% for kiosk in kiosks %}
+    <li><a href="{{ url_for('kiosks.kiosk_disks', kiosk_id=kiosk.id) }}">ID: {{ kiosk.id }} - Address: {{ kiosk.address
+            }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

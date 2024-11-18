@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}{{ movie.title }} - Yellow Bucket{% endblock %}
+
+{% block body %}
+<button onclick="history.back()">Back to previous page</button>
+<section class="section">
+    <div class="container">
+        <div class="movie-details">
+            <img src="https://image.tmdb.org/t/p/w342{{ movie.poster_path }}" alt="{{ movie.title }}" loading="lazy">
+
+            <div class="movie-info">
+                <h1 class="title">{{ movie.title }}</h1>
+                <p><strong>Overview:</strong> {{ movie.overview }}</p>
+                <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
+                <p><strong>Rating:</strong> {{ movie.vote_average }}</p>
+                <a href="{{ url_for('movies.edit_movie', movie_id=movie.id) }}">
+                    <button>Edit Movie</button>
+                </a>
+                <br><br>
+                <a href="{{ url_for('orders.rental_history', movie_id=movie.id) }}">View Rental History</a>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>Rent This Movie</h2>
+        {% if available_discs %}
+        <form action="{{ url_for('orders.rent_movie', movie_id=movie.id) }}" method="post">
+
+            <label for="disc_id">Select Disc:</label>
+            <select id="disc_id" name="disc_id" required>
+                {% for disc in available_discs %}
+                <option value="{{ disc.id }}">Disc {{ disc.serialNumber }} (Kiosk Location: {{ disc.location }})
+                </option>
+                {% endfor %}
+            </select>
+
+            <label for="customer_id">Customer ID:</label>
+            <input type="number" id="customer_id" name="customer_id" required>
+
+            <button type="submit">Rent Movie</button>
+        </form>
+        {% else %}
+        <p>No available discs for this movie at the moment.</p>
+        {% endif %}
+
+    </div>
+</section>
+{% endblock %}

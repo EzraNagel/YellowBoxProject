@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Current Orders - Yellow Bucket{% endblock %}
+
+{% block body %}
+<h1>All Current Orders</h1>
+
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Movie Title</th>
+                <th>Customer ID</th>
+                <th>Kiosk Location</th>
+                <th>Checkout Date</th>
+                <th>Return Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.movie.title }}</td>
+                <td>{{ order.customerId }}</td>
+                <td>{{ order.kioskLocation }}</td>
+
+                <td>{{ order.checkoutDate | datetimeformat if order.checkoutDate else 'N/A' }}</td>
+
+                <td>{{ order.returnDate | datetimeformat if order.returnDate else 'Not returned' }}</td>
+
+                <td>
+                    {% if not order.returnDate %}
+                    <form action="{{ url_for('movies.return_movie', order_id=order.id) }}" method="post">
+                        <button type="submit">Return Movie</button>
+                    </form>
+                    {% else %}
+                    Returned
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
