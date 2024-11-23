@@ -6,7 +6,6 @@
 <table class="rental-history-table">
     <thead>
         <tr>
-            <th>Customer</th>
             <th>Kiosk Address</th>
             <th>Checkout Date</th>
             <th>Return Date</th>
@@ -15,7 +14,6 @@
     <tbody>
         {% for rental, username, address in rentals %}
         <tr>
-            <td>{{ username }}</td>
             <td>{{ address }}</td>
             <td>{{ rental.checkoutDate }}</td>
             <td>{{ rental.returnDate }}</td>

@@ -1,7 +1,8 @@
-from flask import render_template, json
+from flask import render_template, json, session, request, redirect
 import json
+import sys
 from . import base
-from app.models import db, Movie
+from app.models import db, Movie, User
 
 
 @base.route('/')
@@ -26,3 +27,32 @@ def base():
                 pass
 
     return render_template('base/home.html', movies=top_movies, collections=parsed_collections)
+
+@base.route("/login", methods=["POST", "GET"])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        login_error = None
+
+        user = db.session.query(User).filter_by(username=username).first()
+
+        if user and user.password:
+            session['logged_in'] = True
+            session['userID'] = user.id
+            session['username'] = user.username
+            session['email'] = user.email
+
+            return redirect('/')
+        else:
+            login_error = 'Invalid username or password.'
+
+        return render_template('base/login.html', login_error=login_error)
+
+    return render_template('base/login.html')
+
+
+@base.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/')

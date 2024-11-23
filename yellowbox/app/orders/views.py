@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, session
 from . import orders
 from app.models import db, Order, Movie, User, Disk, Kiosk
 from datetime import datetime
@@ -58,10 +58,13 @@ def return_movie(order_id):
 
 @orders.route('/orders', methods=['GET'])
 def orders():
-    orders = Order.query.all()
+    user_id = session.get('userID')
+    if not user_id:
+        return redirect('/login')
+
+    orders = Order.query.filter_by(customerId=user_id).all()
 
     for order in orders:
         order.movie = Movie.query.get(order.movieId)
 
     return render_template('orders/orders.html', orders=orders)
-

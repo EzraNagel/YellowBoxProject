@@ -136,8 +136,8 @@ def movies_search_results():
 def movie_detail(movie_id):
     movie = db.session.query(Movie).get(movie_id)
     available_discs = db.session.query(Disk).filter_by(movieId=movie_id, status='available').all()
-    kiosks = Kiosk.query.all()
-
+    kiosks = db.session.query(Kiosk.address, Disk.id).join(Disk, Kiosk.id == Disk.kioskId) \
+        .filter(Disk.movieId == movie_id).all()
     return render_template('movies/movie_detail.html', movie=movie, available_discs=available_discs, kiosks=kiosks)
 
 

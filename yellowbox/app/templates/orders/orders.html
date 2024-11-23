@@ -3,7 +3,7 @@
 {% block title %}Current Orders - Yellow Bucket{% endblock %}
 
 {% block body %}
-<h1>All Current Orders</h1>
+<h1>Your Current Orders</h1>
 
 <div>
     <table>
@@ -11,7 +11,6 @@
             <tr>
                 <th>Order ID</th>
                 <th>Movie Title</th>
-                <th>Customer ID</th>
                 <th>Kiosk Location</th>
                 <th>Checkout Date</th>
                 <th>Return Date</th>
@@ -23,7 +22,6 @@
             <tr>
                 <td>{{ order.id }}</td>
                 <td>{{ order.movie.title }}</td>
-                <td>{{ order.customerId }}</td>
                 <td>{{ order.kioskLocation }}</td>
 
                 <td>{{ order.checkoutDate | datetimeformat if order.checkoutDate else 'N/A' }}</td>
