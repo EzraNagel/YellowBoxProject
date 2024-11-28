@@ -3,6 +3,9 @@ import json
 import sys
 from . import base
 from app.models import db, Movie, User
+from flask_wtf import FlaskForm
+from wtforms import IntegerField, StringField, TextAreaField, SubmitField
+from wtforms.validators import DataRequired, NumberRange
 
 
 @base.route('/')
@@ -56,3 +59,8 @@ def login():
 def logout():
     session.clear()
     return redirect('/')
+
+class ReviewForm(FlaskForm):
+    rating = IntegerField('Rating', validators=[DataRequired(), NumberRange(min=1, max=10)], render_kw={"placeholder": "Rating (1-10)"})
+    review_text = TextAreaField('Review', validators=[DataRequired()], render_kw={"placeholder": "Leave a review..."})
+    submit = SubmitField('Submit Review')

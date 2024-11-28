@@ -25,14 +25,14 @@
         <hr>
 
         <h2>Rent This Movie</h2>
-        {% if available_discs %}
+        {% if available_disks %}
         <form action="{{ url_for('orders.rent_movie', movie_id=movie.id) }}" method="post">
 
-            <label for="disc_id">Select Disc:</label>
-            <select id="disc_id" name="disc_id" required>
-                {% for disc, kiosk_location in available_discs %}
-                <option value="{{ disc.id }}">
-                    Disc {{ disc.serialNumber }} (Kiosk Location: {{ kiosk_location }})
+            <label for="disk_id">Select Disk:</label>
+            <select id="disk_id" name="disk_id" required>
+                {% for disk, kiosk_location in available_disks %}
+                <option value="{{ disk.id }}">
+                    Disk {{ disk.serialNumber }} (Kiosk Location: {{ kiosk_location }})
                 </option>
                 {% endfor %}
             </select>
@@ -41,7 +41,7 @@
             <button type="submit">Rent Movie</button>
         </form>
         {% else %}
-        <p>No available discs for this movie at the moment.</p>
+        <p>No available disks for this movie at the moment.</p>
         {% endif %}
 
     </div>

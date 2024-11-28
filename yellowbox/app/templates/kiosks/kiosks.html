@@ -3,12 +3,18 @@
 {% block title %}Kiosks - Yellow Bucket{% endblock %}
 
 {% block body %}
-<h1 class="title">Kiosks</h1>
-<ul>
-    {% for kiosk in kiosks %}
-    <li><a href="{{ url_for('kiosks.kiosk_disks', kiosk_id=kiosk.id) }}">ID: {{ kiosk.id }} - Address: {{ kiosk.address
-            }}</a>
-    </li>
-    {% endfor %}
-</ul>
+<div class="container">
+    <h1 class="title">Kiosks</h1>
+    <p class="intro">Browse through our available kiosks and view their associated discs.</p>
+
+    <div class="kiosk-list">
+        {% for kiosk in kiosks %}
+        <div class="kiosk-card">
+            <h2 class="kiosk-id">Kiosk ID: {{ kiosk.id }}</h2>
+            <p class="kiosk-address">Address: {{ kiosk.address }}</p>
+            <a href="{{ url_for('kiosks.kiosk_disks', kiosk_id=kiosk.id) }}" class="view-disks-btn">View Disks</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

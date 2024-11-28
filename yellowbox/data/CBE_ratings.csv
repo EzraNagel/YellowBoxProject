@@ -1,4 +1,4 @@
-﻿userId,movieId,rating,timestamp
+﻿customerId,movieId,rating,timestamp
 15,11,2.5,1093028381
 19,11,3,855192773
 23,11,3.5,1166728170

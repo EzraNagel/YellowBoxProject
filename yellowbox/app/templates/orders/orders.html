@@ -15,6 +15,10 @@
                 <th class="table-header">Checkout Date</th>
                 <th class="table-header">Return Date</th>
                 <th class="table-header">Action</th>
+                <th class="table-header">Rating</th>
+                <th class="table-header">Review</th>
+                <th class="table-header">Return Status</th>
+
             </tr>
         </thead>
         <tbody>
@@ -27,6 +31,15 @@
                 </td>
                 <td class="table-cell">{{ order.returnDate | datetimeformat if order.returnDate else 'Not returned'
                     }}
+                </td>
+                <td>{{ order.rating if order.rating else 'No rating yet' }}</td>
+                <td>{{ order.review if order.review else 'No review yet' }}</td>
+                <td>
+                    {% if order.rating is none %}
+                    <a href="{{ url_for('orders.order_page', order_id=order.id) }}">Leave a Review</a>
+                    {% else %}
+                    <a href="{{ url_for('orders.order_page', order_id=order.id) }}">Edit Review</a>
+                    {% endif %}
                 </td>
                 <td class="table-cell">
                     {% if not order.returnDate %}

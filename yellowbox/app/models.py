@@ -37,6 +37,7 @@ class Rating(db.Model):
     __tablename__ = 'ratings'
     
     id = db.Column(BigInteger, primary_key=True, autoincrement=True)
+    customerId = db.Column(BigInteger, nullable=False)
     movieId = db.Column(BigInteger, nullable=False)  
     rating = db.Column(Float, nullable=True)
     timestamp = db.Column(BigInteger, nullable=True)
@@ -82,8 +83,9 @@ class Disk(db.Model):
 class Order(db.Model):
     __tablename__ = 'orders'
 
-    id = db.Column(BigInteger, primary_key=True)
+    id = db.Column(BigInteger, primary_key=True, autoincrement=True)
     movieId = db.Column(BigInteger, nullable=False)
+    disk_id = db.Column(BigInteger, nullable=False)
     customerId = db.Column(BigInteger, nullable=False)
     checkoutDate = db.Column(BigInteger, nullable=False)
     returnDate = db.Column(BigInteger, nullable=True)

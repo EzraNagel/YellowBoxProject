@@ -2,7 +2,7 @@ import pandas as pd
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app import db
-from app.models import Movie, Disk, User, Order, Kiosk  # Import models directly from app.models
+from app.models import Movie, Disk, User, Order, Kiosk, Rating  # Import models directly from app.models
 import traceback
 import numpy as np
 from app import create_app
@@ -28,7 +28,8 @@ files_to_import = {
     'data/CBE_disk.csv': Disk,
     'data/CBE_users.csv': User,
     'data/CBE_orders.csv': Order,
-    'data/CBE_kiosks.csv': Kiosk
+    'data/CBE_kiosks.csv': Kiosk,
+    'data/CBE_ratings.csv': Rating
 }
 
 # Function to map DataFrame to model fields

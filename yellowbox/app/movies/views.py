@@ -135,9 +135,9 @@ def movies_search_results():
 @movies.route('/movie/<int:movie_id>')
 def movie_detail(movie_id):
     movie = db.session.query(Movie).get(movie_id)
-    available_discs = db.session.query(Disk, Kiosk.address).join(Kiosk, Kiosk.id == Disk.kiosk_id).filter(Disk.movieId == movie_id, Disk.status == False).all()
+    available_disks = db.session.query(Disk, Kiosk.address).join(Kiosk, Kiosk.id == Disk.kiosk_id).filter(Disk.movieId == movie_id, Disk.status == False).all()
 
-    return render_template('movies/movie_detail.html', movie=movie, available_discs=available_discs)
+    return render_template('movies/movie_detail.html', movie=movie, available_disks=available_disks)
 
 
 @movies.app_template_filter('datetimeformat')
