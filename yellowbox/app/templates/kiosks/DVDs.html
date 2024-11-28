@@ -35,13 +35,13 @@
 
 <div style="max-height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
     <ul>
-        {% for disk in disks %}
-        <li>
-            Disk ID: {{ disk.id }}<br>
-            Movie Title: {{ disk.title }}<br>
-            Kiosk Location: {{ disk.address }}<br>
-            Condition: {{ disk.condition }}<br>
-        </li>
+        {% for disc, title, address in disks %}
+        <div>
+            <p>Disk ID: {{ disc.id }}</p>
+            <p>Movie Title: {{ title }}</p>
+            <p>Kiosk Location: {{ address }}</p>
+            <p>Condition: {{ disc.condition }}</p>
+        </div>
         <br />
         {% endfor %}
     </ul>

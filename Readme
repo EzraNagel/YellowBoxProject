@@ -24,8 +24,15 @@ Import Tables:
         Get-Content yellowbox_db.sql | mysql -u yellowbox_user -p yellowbox_db    
     Command Line:
         mysql -u yellowbox_user -p yellowbox_db < yellowbox_db.sql
+        password: password
 
+    Command for creating .sql file: 
+        mysqldump -u yellowbox_user -p yellowbox_db > yellowbox_db.sql 
 
+Example users:
+    Range from 1-15, just replace number
+    Username: user1
+    Password: pass1
 
     
     

@@ -16,7 +16,7 @@ def kiosk_disks(kiosk_id):
     if kiosk is None:
         return redirect(url_for('kiosks'))
 
-    disks = db.session.query(Disk.id, Disk.condition, Movie.title).join(Movie, Disk.movieId == Movie.id).filter(Disk.location == kiosk_id).all()
+    disks = db.session.query(Disk.id, Disk.condition, Movie.title).join(Movie, Disk.movieId == Movie.id).filter(Disk.kiosk_id == kiosk_id).all()
 
     return render_template('kiosks/kiosk_disks.html', kiosk=kiosk, disks=disks)
 
@@ -37,7 +37,7 @@ def add_disk():
 
     new_disk = Disk(
         movieId=int(movie_id),
-        location=int(location_id) if location_id else None,
+        kiosk_id=int(location_id) if location_id else None,
         condition=condition
     )
     
@@ -61,7 +61,7 @@ def success_add():
 @kiosks.route('/DVDs')
 def DVDs():
     condition_options = ['New', 'Good', 'Fair', 'Poor']
-    disks = db.session.query(Disk.id, Disk.condition, Movie.title, Kiosk.address).join(Movie, Disk.movieId == Movie.id).join(Kiosk, Disk.location == Kiosk.id).all()
+    disks = db.session.query(Disk, Movie.title, Kiosk.address).join(Movie, Disk.movieId == Movie.id).join(Kiosk, Disk.kiosk_id == Kiosk.id).all()
     movies = db.session.query(Movie).all()
     kiosks = db.session.query(Kiosk).all()
     

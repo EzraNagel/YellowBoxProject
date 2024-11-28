@@ -3,38 +3,38 @@
 {% block title %}Current Orders - Yellow Bucket{% endblock %}
 
 {% block body %}
-<h1>Your Current Orders</h1>
+<h1>Order History</h1>
 
-<div>
-    <table>
+<div class="orders-table-container">
+    <table class="orders-table">
         <thead>
             <tr>
-                <th>Order ID</th>
-                <th>Movie Title</th>
-                <th>Kiosk Location</th>
-                <th>Checkout Date</th>
-                <th>Return Date</th>
-                <th>Action</th>
+                <th class="table-header">Order ID</th>
+                <th class="table-header">Movie Title</th>
+                <th class="table-header">Kiosk Location</th>
+                <th class="table-header">Checkout Date</th>
+                <th class="table-header">Return Date</th>
+                <th class="table-header">Action</th>
             </tr>
         </thead>
         <tbody>
             {% for order in orders %}
-            <tr>
-                <td>{{ order.id }}</td>
-                <td>{{ order.movie.title }}</td>
-                <td>{{ order.kioskLocation }}</td>
-
-                <td>{{ order.checkoutDate | datetimeformat if order.checkoutDate else 'N/A' }}</td>
-
-                <td>{{ order.returnDate | datetimeformat if order.returnDate else 'Not returned' }}</td>
-
-                <td>
+            <tr class="table-row">
+                <td class="table-cell">{{ order.id }}</td>
+                <td class="table-cell">{{ order.movie.title }}</td>
+                <td class="table-cell">{{ order.kioskLocation }}</td>
+                <td class="table-cell">{{ order.checkoutDate | datetimeformat if order.checkoutDate else 'N/A' }}
+                </td>
+                <td class="table-cell">{{ order.returnDate | datetimeformat if order.returnDate else 'Not returned'
+                    }}
+                </td>
+                <td class="table-cell">
                     {% if not order.returnDate %}
-                    <form action="{{ url_for('movies.return_movie', order_id=order.id) }}" method="post">
-                        <button type="submit">Return Movie</button>
+                    <form action="{{ url_for('orders.return_movie', order_id=order.id) }}" method="post">
+                        <button type="submit" class="return-button">Return Movie</button>
                     </form>
                     {% else %}
-                    Returned
+                    <span class="returned-status">Returned</span>
                     {% endif %}
                 </td>
             </tr>

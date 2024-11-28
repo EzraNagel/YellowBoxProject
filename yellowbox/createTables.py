@@ -1,9 +1,14 @@
 import pandas as pd
-from app import app, db, Movie, Disk, User, Order, Kiosk
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from app import db
+from app.models import Movie, Disk, User, Order, Kiosk  # Import models directly from app.models
 import traceback
 import numpy as np
+from app import create_app
+
+# Create the Flask app instance
+app = create_app()
 
 with app.app_context():
     db.create_all()
@@ -14,11 +19,9 @@ host = 'localhost'
 port = '3306'
 database = 'yellowbox_db'
 
-
 engine = create_engine(f'mysql+pymysql://{user}:{password}@{host}:{port}/{database}')
 Session = sessionmaker(bind=engine)
 session = Session()
-
 
 files_to_import = {
     'data/CBE_movies_metadata.csv': Movie,

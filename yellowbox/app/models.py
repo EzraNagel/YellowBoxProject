@@ -71,7 +71,7 @@ class Disk(db.Model):
 
     id = db.Column(BigInteger, primary_key=True, autoincrement=True)
     movieId = db.Column(BigInteger, nullable=False)
-    location = db.Column(Integer, nullable=True)
+    kiosk_id = db.Column(Integer, nullable=True)
     condition = db.Column(String(50), nullable=True)
     status = db.Column(db.Boolean, default=False)
 

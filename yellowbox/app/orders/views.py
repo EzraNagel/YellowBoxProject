@@ -17,18 +17,19 @@ def rental_history(movie_id):
     movie = Movie.query.get_or_404(movie_id)
     return render_template('orders/rental_history.html', rentals=rentals, movie=movie)
 
-from flask import request, redirect, url_for
-from datetime import datetime
-
 @orders.route('/rent_movie/<int:movie_id>', methods=['POST'])
 def rent_movie(movie_id):
-    customer_id = request.form.get('customer_id')
+    customer_id = session.get('userID')  
+    
+    if not customer_id:
+        return redirect(url_for('base.login'))   
+     
     disc_id = request.form.get('disc_id')  
 
-    disk = db.session.query(Disk).filter_by(id=disc_id, movieId=movie_id, status='available').first()
+    disk = db.session.query(Disk).filter_by(id=disc_id, movieId=movie_id, status=False).first()
 
     if not disk:
-        return redirect(url_for('DVDs'))
+        return redirect(url_for('kiosks.DVDs'))
 
     new_order = Order(
         movieId=movie_id,
@@ -53,17 +54,18 @@ def return_movie(order_id):
 
     db.session.commit()
     
-    return redirect(url_for('customers.view_customer', customer_id=order.customerId))
+    return redirect(url_for('orders.orders', customer_id=order.customerId))
 
 
 @orders.route('/orders', methods=['GET'])
 def orders():
-    user_id = session.get('userID')
+    user_id = request.args.get('user_id')
+    if not user_id:
+        user_id = session.get('userID')
     if not user_id:
         return redirect('/login')
 
     orders = Order.query.filter_by(customerId=user_id).all()
-
     for order in orders:
         order.movie = Movie.query.get(order.movieId)
 

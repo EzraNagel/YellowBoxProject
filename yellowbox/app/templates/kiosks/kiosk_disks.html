@@ -4,10 +4,35 @@
 
 {% block body %}
 <h1 class="title">Disks in {{ kiosk.address }}</h1>
-<ul>
-    {% for disk_id, condition, title in disks %}
-    <li>Disk ID: {{ disk_id }}, Condition: {{ condition }}, Title: {{ title }}</li>
-    {% endfor %}
-</ul>
-<a href="{{ url_for('kiosks.kiosks_view') }}">Back to Kiosks</a>
+
+<!-- Table to display disk information -->
+<table class="disk-table">
+    <thead>
+        <tr>
+            <th>Disk ID</th>
+            <th>Condition</th>
+            <th>Title</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for disk_id, condition, title in disks %}
+        <tr>
+            <td>{{ disk_id }}</td>
+            <td>{{ condition }}</td>
+            <td>{{ title }}</td>
+            <td>
+                {% if status %}
+                Checked Out
+                {% else %}
+                Not Checked Out
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ url_for('kiosks.kiosks_view') }}" class="back-link">Back to Kiosks</a>
+
 {% endblock %}

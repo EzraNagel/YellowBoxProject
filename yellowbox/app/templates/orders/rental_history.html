@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% block body %}
 <h1 class="rental-history-title">Rental History for {{ movie.title }}</h1>
 
+
+{% if rentals|length > 0 %}
 <table class="rental-history-table">
     <thead>
         <tr>
@@ -12,13 +14,16 @@
         </tr>
     </thead>
     <tbody>
-        {% for rental, username, address in rentals %}
+        {% for rental, user_id, address in rentals %}
         <tr>
             <td>{{ address }}</td>
-            <td>{{ rental.checkoutDate }}</td>
-            <td>{{ rental.returnDate }}</td>
+            <td>{{ rental.checkoutDate | datetimeformat }}</td>
+            <td>{{ rental.returnDate | datetimeformat }}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+{% else %}
+<p>No rentals found for this movie.</p>
+{% endif %}
 {% endblock %}

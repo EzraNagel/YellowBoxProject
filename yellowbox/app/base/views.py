@@ -6,7 +6,7 @@ from app.models import db, Movie, User
 
 
 @base.route('/')
-def base():
+def home():
 
     top_movies = db.session.query(
         Movie

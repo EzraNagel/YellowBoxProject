@@ -72,15 +72,9 @@ def all_customers():
             .filter(Order.customerId == user.id, Order.returnDate == 0)
             .all()
         )
-        rental_history = (
-            db.session.query(Order, Movie)
-            .join(Movie, Order.movieId == Movie.id)
-            .filter(Order.customerId == user.id, Order.returnDate > 0)
-            .all()
-        )
         customer_data.append({
             "customer": user,
             "current_rentals": current_rentals,
-            "rental_history": rental_history
+            "history_link": url_for('orders.orders', user_id=user.id)
         })
     return render_template('customers/all_customers.html', customer_data=customer_data)
