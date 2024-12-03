@@ -7,10 +7,12 @@
     <div class="order-details">
         <h1 class="order-title">Order for {{ movie.title }}</h1>
         <div class="order-info">
-            <p><strong>Checkout Date:</strong> {{ order.checkoutDate | datetimeformat if order.checkoutDate else 'N/A'
-                }}</p>
-            <p><strong>Return Date:</strong> {{ order.returnDate | datetimeformat if order.returnDate else 'Not
-                returned' }}</p>
+            <p><strong>Checkout Date:</strong> {{ order.checkoutDate | datetimeformat if order.checkoutDate else 'N/A'}}
+            </p>
+            <p>
+                <strong>Return Date:</strong> {{ order.returnDate | datetimeformat if order.returnDate else 'Not
+                returned' }}
+            </p>
         </div>
 
         <hr>

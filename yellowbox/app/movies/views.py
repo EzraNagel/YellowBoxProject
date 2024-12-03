@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for
+from sqlalchemy.sql import func
 from datetime import datetime
 from . import movies
-from app.models import db, Movie, Disk, Kiosk
+from app.models import db, Movie, Disk, Kiosk, Order
 import json
 
 @movies.route('/view')
@@ -135,9 +136,16 @@ def movies_search_results():
 @movies.route('/movie/<int:movie_id>')
 def movie_detail(movie_id):
     movie = db.session.query(Movie).get(movie_id)
+    
+    avg_rating = db.session.query(func.avg(Order.rating)).filter(Order.movieId == movie_id).scalar()
+    avg_rating = round(avg_rating, 2) if avg_rating else "No ratings yet"
+    
+    reviews = db.session.query(Order).filter(Order.movieId == movie_id).all()
+    print(reviews)
+
     available_disks = db.session.query(Disk, Kiosk.address).join(Kiosk, Kiosk.id == Disk.kiosk_id).filter(Disk.movieId == movie_id, Disk.status == False).all()
 
-    return render_template('movies/movie_detail.html', movie=movie, available_disks=available_disks)
+    return render_template('movies/movie_detail.html', movie=movie, avg_rating=avg_rating, available_disks=available_disks, reviews = reviews)
 
 
 @movies.app_template_filter('datetimeformat')

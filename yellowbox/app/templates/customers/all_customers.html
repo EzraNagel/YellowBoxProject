@@ -3,6 +3,7 @@
 {% block title %}User List - Yellow Bucket{% endblock %}
 
 {% block body %}
+<button onclick="history.back()">Back to previous page</button>
 <section class="section">
     <div class="container">
         <a href="/new_customer">
@@ -14,14 +15,9 @@
             {% for data in customer_data %}
             <li>
 
-                <!-- Corrected customer link -->
                 <a href="{{ url_for('customers.view_customer', customer_id=data.customer.id) }}">
                     <p>{{ data.customer.username }}</p>
                 </a>
-
-                <a href="{{ data.history_link }}">View Order History</a>
-
-
 
             </li>
             {% endfor %}

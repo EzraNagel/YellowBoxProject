@@ -4,11 +4,16 @@
 
 {% block body %}
 
+<button onclick="history.back()">Back to previous page</button>
+<br />
+
 <h1>Customer Details</h1>
 <p><strong>Customer ID:</strong> {{ customer.id }}</p>
 <p><strong>Username:</strong> {{ customer.username }}</p>
 <p><strong>Email:</strong> {{ customer.email }}</p>
 
+<a href="{{ history_link }}">View Order History</a>
+<br />
 
 <a href="{{ url_for('customers.update_customer', customer_id=customer.id) }}">Edit Customer</a>
 {% endblock %}

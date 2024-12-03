@@ -39294,6 +39294,45 @@ textarea.form-control {
   border-radius: 4px;
 }
 
+.rent-and-reviews {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.rent-section {
+  flex: 2;
+  padding: 20px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+}
+
+.reviews-section {
+  flex: 1;
+  padding: 20px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+}
+
+.reviews-list {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.review {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.review:last-child {
+  border-bottom: none;
+}
 
 
 

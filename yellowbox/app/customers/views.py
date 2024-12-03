@@ -57,9 +57,16 @@ def update_customer(customer_id):
 
 @customers.route('/view_customer/<int:customer_id>', methods=['GET'])
 def view_customer(customer_id):
-    customer = User.query.get_or_404(customer_id)
+    customer = db.session.query(User).filter(User.id == customer_id).first()
+    customer_orders = (
+        db.session.query(Order, Movie)
+        .join(Movie, Order.movieId == Movie.id)
+        .filter(Order.customerId == customer.id)
+        .all()
+    )
+    history_link = url_for('orders.orders', user_id=customer.id)
+    return render_template('customers/view_customer.html', customer=customer, customer_orders=customer_orders, history_link=history_link)
 
-    return render_template('customers/view_customer.html', customer=customer)
 
 @customers.route('/all_customers', methods=['GET'])
 def all_customers():
@@ -75,6 +82,5 @@ def all_customers():
         customer_data.append({
             "customer": user,
             "current_rentals": current_rentals,
-            "history_link": url_for('orders.orders', user_id=user.id)
         })
     return render_template('customers/all_customers.html', customer_data=customer_data)

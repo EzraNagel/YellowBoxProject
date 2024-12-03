@@ -13,7 +13,8 @@
                 <h1 class="title">{{ movie.title }}</h1>
                 <p><strong>Overview:</strong> {{ movie.overview }}</p>
                 <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
-                <p><strong>Rating:</strong> {{ movie.vote_average }}</p>
+                <p><strong>TMDB Rating:</strong> {{ movie.vote_average }}</p>
+                <p><strong>Average Customer Rating:</strong> {{ avg_rating }}</p>
                 <a href="{{ url_for('movies.edit_movie', movie_id=movie.id) }}">
                     <button>Edit Movie</button>
                 </a>
@@ -24,26 +25,43 @@
 
         <hr>
 
-        <h2>Rent This Movie</h2>
-        {% if available_disks %}
-        <form action="{{ url_for('orders.rent_movie', movie_id=movie.id) }}" method="post">
+        <div class="rent-and-reviews">
+            <div class="rent-section">
+                <h2>Rent This Movie</h2>
+                {% if available_disks %}
+                <form action="{{ url_for('orders.rent_movie', movie_id=movie.id) }}" method="post">
 
-            <label for="disk_id">Select Disk:</label>
-            <select id="disk_id" name="disk_id" required>
-                {% for disk, kiosk_location in available_disks %}
-                <option value="{{ disk.id }}">
-                    Disk {{ disk.serialNumber }} (Kiosk Location: {{ kiosk_location }})
-                </option>
-                {% endfor %}
-            </select>
+                    <label for="disk_id">Select Disk:</label>
+                    <select id="disk_id" name="disk_id" required>
+                        {% for disk, kiosk_location in available_disks %}
+                        <option value="{{ disk.id }}">
+                            Disk {{ disk.serialNumber }} (Kiosk Location: {{ kiosk_location }})
+                        </option>
+                        {% endfor %}
+                    </select>
 
+                    <button type="submit">Rent Movie</button>
+                </form>
+                {% else %}
+                <p>No available disks for this movie at the moment.</p>
+                {% endif %}
+            </div>
 
-            <button type="submit">Rent Movie</button>
-        </form>
-        {% else %}
-        <p>No available disks for this movie at the moment.</p>
-        {% endif %}
+            <div class="reviews-section">
+                <h2>User Reviews</h2>
+                <div class="reviews-list">
+                    {% if reviews %}
+                    {% for order in reviews %}
+                    <div class="review">
+                        <p>{{ order.review }}</p>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p>No reviews for this movie yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
 
-    </div>
 </section>
 {% endblock %}
