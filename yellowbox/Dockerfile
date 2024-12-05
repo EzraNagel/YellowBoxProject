@@ -8,10 +8,16 @@ RUN apk add --no-cache \
     python3-dev \
     libffi-dev \
     mariadb-connector-c-dev \
-    mariadb-dev
+    mariadb-dev 
 
 # By default, listen on port 5000
 EXPOSE 5000/tcp
+
+ENV DB_HOST=yellowbox-db.c12ociym6hbt.us-east-1.rds.amazonaws.com
+ENV DB_USER=admin
+ENV DB_PASSWORD=yellowboxpassword$
+ENV DB_NAME=yellowbox_db
+
 
 # Set the working directory in the container
 WORKDIR /app
