@@ -44,4 +44,18 @@ AWS/ Docker:
     docker run -p 5000:5000 flasky-app
 
 
+ssh -i "yellowbox-key-pair.pem" ubuntu@ec2-54-146-181-208.compute-1.amazonaws.com
+sudo apt update
 
+generate token with read rights
+git clone https://<USERNAME>:<TOKEN>@github.com/EzraNagel/CSC407.git
+
+sudo apt install python3.12-venv
+sudo python3 -m venv venv
+source venv/bin/activate
+
+sudo apt install pkg-config libmysqlclient-dev
+sudo apt install build-essential
+sudo apt install python3.12-dev
+pip install flask-wtf
+pip install -r requirements.txt
