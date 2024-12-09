@@ -5,17 +5,23 @@
 {% block body %}
 <section class="section">
     <div class="container">
-        <a href="/add_movie">
-            <h1 class="add_customer">Add a Movie</h1>
-        </a>
+
+        <div class="buttons">
+            <a href="{{ url_for('movies.search') }}" class="button-gold">
+                Search Movies
+            </a>
+        </div>
 
         <h1 class="title">All Movies</h1>
+
+
         <ul class="movie-grid">
             {% for movie in movies %}
             <li class="movie-item">
                 <a href="{{ url_for('movies.movie_detail', movie_id=movie.id) }}">
                     <img src="https://image.tmdb.org/t/p/w154{{ movie.poster_path }}" alt="{{ movie.title }} poster">
-                    <p>{{ movie.title }}</p>
+                    <p class="movie-title">{{ movie.title }}</p>
+
                 </a>
             </li>
             {% endfor %}

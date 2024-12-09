@@ -5,47 +5,58 @@
 {% block body %}
 <h1 class="title">DVDs</h1>
 
-<h1>Add New Disk</h1>
-<form action="{{ url_for('kiosks.add_disk') }}" method="post">
-    <label for="movieId">Select Movie:</label>
-    <select id="movieId" name="movieId" required>
-        {% for movie in movies %}
-        <option value="{{ movie.id }}">{{ movie.title }}</option>
-        {% endfor %}
-    </select>
+<section class="section">
+    <div class="container">
+        <h2>Add New Disk</h2>
+        <form action="{{ url_for('kiosks.add_disk') }}" method="post" class="form-group">
+            <div class="form-field">
+                <label for="movieId">Select Movie:</label>
+                <select id="movieId" name="movieId" required class="form-control">
+                    {% for movie in movies %}
+                    <option value="{{ movie.id }}">{{ movie.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-    <label for="location">Select Kiosk Location:</label>
-    <select id="location" name="location" required>
-        {% for kiosk in kiosks %}
-        <option value="{{ kiosk.id }}">{{ kiosk.address }}</option>
-        {% endfor %}
-    </select>
+            <div class="form-field">
+                <label for="location">Select Kiosk Location:</label>
+                <select id="location" name="location" required class="form-control">
+                    {% for kiosk in kiosks %}
+                    <option value="{{ kiosk.id }}">{{ kiosk.address }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-    <label for="condition">Select Condition:</label>
-    <select id="condition" name="condition" required>
-        {% for option in condition_options %}
-        <option value="{{ option }}">{{ option }}</option>
-        {% endfor %}
-    </select>
+            <div class="form-field">
+                <label for="condition">Select Condition:</label>
+                <select id="condition" name="condition" required class="form-control">
+                    {% for option in condition_options %}
+                    <option value="{{ option }}">{{ option }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-    <button type="submit">Add Disk</button>
-</form>
+            <button type="submit" class="button-gold">Add Disk</button>
+        </form>
 
-<h1 class="title">All DVD copies</h1>
+        <h2 class="title">All DVD copies</h2>
 
-<div style="max-height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
-    <ul>
-        {% for disk, title, address in disks %}
-        <div>
-            <p>Disk ID: {{ disk.id }}</p>
-            <p>Movie Title: {{ title }}</p>
-            <p>Kiosk Location: {{ address }}</p>
-            <p>Condition: {{ disk.condition }}</p>
+        <div class="disk-list">
+            {% if disks %}
+            <ul>
+                {% for disk, title, address in disks %}
+                <li class="disk-item">
+                    <p>Disk ID: {{ disk.id }}</p>
+                    <p>Movie Title: {{ title }}</p>
+                    <p>Kiosk Location: {{ address }}</p>
+                    <p>Condition: {{ disk.condition }}</p>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No disks available.</p>
+            {% endif %}
         </div>
-        <br />
-        {% endfor %}
-    </ul>
-</div>
-
-
+    </div>
+</section>
 {% endblock %}

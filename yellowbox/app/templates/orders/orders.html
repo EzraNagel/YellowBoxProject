@@ -44,7 +44,7 @@
                 <td class="table-cell">
                     {% if not order.returnDate %}
                     <form action="{{ url_for('orders.return_movie', order_id=order.id) }}" method="post">
-                        <button type="submit" class="return-button">Return Movie</button>
+                        <button class="button-gold" type="submit" class="return-button">Return Movie</button>
                     </form>
                     {% else %}
                     <span class="returned-status">Returned</span>
