@@ -1,19 +1,25 @@
 {% extends "base.html" %}
 
-{% block title %}Current Orders - Yellow Bucket{% endblock %}
+{% block title %}Customer Details - Yellow Bucket{% endblock %}
 
 {% block body %}
+<section class="section">
+    <div class="container">
+        <button onclick="history.back()" class="btn btn-secondary button-gold">Back</button>
+        <br />
 
-<button onclick="history.back()">Back to previous page</button>
-<br />
+        <h1>Customer Details</h1>
+        <div class="customer-info">
+            <p><strong>Customer ID:</strong> {{ customer.id }}</p>
+            <p><strong>Username:</strong> {{ customer.username }}</p>
+            <p><strong>Email:</strong> {{ customer.email }}</p>
+        </div>
 
-<h1>Customer Details</h1>
-<p><strong>Customer ID:</strong> {{ customer.id }}</p>
-<p><strong>Username:</strong> {{ customer.username }}</p>
-<p><strong>Email:</strong> {{ customer.email }}</p>
-
-<a href="{{ history_link }}">View Order History</a>
-<br />
-
-<a href="{{ url_for('customers.update_customer', customer_id=customer.id) }}">Edit Customer</a>
+        <div class="action-links">
+            <a href="{{ history_link }}" class="btn btn-link">View Order History</a>
+            <a href="{{ url_for('customers.update_customer', customer_id=customer.id) }}" class="btn btn-link">Edit
+                Customer</a>
+        </div>
+    </div>
+</section>
 {% endblock %}

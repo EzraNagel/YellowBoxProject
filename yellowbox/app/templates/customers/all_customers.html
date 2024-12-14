@@ -3,25 +3,23 @@
 {% block title %}User List - Yellow Bucket{% endblock %}
 
 {% block body %}
-<button onclick="history.back()">Back to previous page</button>
+<button onclick="history.back()" class="btn btn-secondary">Back</button>
 <section class="section">
     <div class="container">
-        <a href="/new_customer">
-            <h1 class="add_customer">Add a Customer</h1>
+        <a href="/new_customer" class="btn btn-add">
+            <h1 class="add_customer button-gold">Add a Customer</h1>
         </a>
 
         <h1 class="title">All Customers</h1>
-        <ol>
+        <ul class="customer-list">
             {% for data in customer_data %}
-            <li>
-
-                <a href="{{ url_for('customers.view_customer', customer_id=data.customer.id) }}">
+            <li class="customer-item">
+                <a href="{{ url_for('customers.view_customer', customer_id=data.customer.id) }}" class="customer-link">
                     <p>{{ data.customer.username }}</p>
                 </a>
-
             </li>
             {% endfor %}
-        </ol>
+        </ul>
     </div>
 </section>
 {% endblock %}

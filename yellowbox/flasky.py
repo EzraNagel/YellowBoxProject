@@ -10,4 +10,4 @@ if __name__ == "__main__":
             print("Database tables created successfully.")
         except Exception as e:
             print(f"Error creating database tables: {e}")
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)

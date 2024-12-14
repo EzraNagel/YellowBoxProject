@@ -28,10 +28,12 @@
                 </label>
             </div>
 
-            <button class="button is-block is-info is-large is-fullwidth">Login</button>
+            <button class="button is-block is-large is-fullwidth"
+                style="background-color: #FFB612; color: #101820; border: none; border-radius: 5px; transition: background-color 0.3s ease;">Login</button>
 
             {% if login_error %}
-            <div class="notification is-danger">
+            <div class="notification is-danger"
+                style="background-color: #1C1C1C; border-color: #FFB612; color: #FFB612;">
                 {{ login_error }}
             </div>
             {% endif %}

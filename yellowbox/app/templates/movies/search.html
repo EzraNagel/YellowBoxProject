@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Movie Search - Yellow Bucket{% endblock %}
+
+{% block body %}
+<section class="section">
+    <div class="container">
+        <h1 class="title has-text-centered">Search Movies</h1>
+
+        <form method="GET" action="{{ url_for('movies.search') }}" class="box">
+            <div class="field">
+                <label for="title" class="label">Title:</label>
+                <div class="control">
+                    <input type="text" id="title" name="title" class="input" placeholder="Search by title..."
+                        autocomplete="off">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="run_time_min" class="label">Runtime Min:</label>
+                <div class="control">
+                    <input type="number" id="run_time_min" name="run_time_min" class="input">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="run_time_max" class="label">Runtime Max:</label>
+                <div class="control">
+                    <input type="number" id="run_time_max" name="run_time_max" class="input">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="popularity_min" class="label">Popularity Min:</label>
+                <div class="control">
+                    <input type="number" step="0.1" id="popularity_min" name="popularity_min" class="input">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="popularity_max" class="label">Popularity Max:</label>
+                <div class="control">
+                    <input type="number" step="0.1" id="popularity_max" name="popularity_max" class="input">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="release_date_min" class="label">Release Date From:</label>
+                <div class="control">
+                    <input type="date" id="release_date_min" name="release_date_min" class="input">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="release_date_max" class="label">Release Date To:</label>
+                <div class="control">
+                    <input type="date" id="release_date_max" name="release_date_max" class="input">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="rating_min" class="label">Rating Min:</label>
+                <div class="control">
+                    <input type="number" step="0.1" id="rating_min" name="rating_min" class="input">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="rating_max" class="label">Rating Max:</label>
+                <div class="control">
+                    <input type="number" step="0.1" id="rating_max" name="rating_max" class="input">
+                </div>
+            </div>
+
+            <div class="field is-grouped">
+                <div class="control">
+                    <button type="submit" class="button-gold">Search</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="title is-4 has-text-centered"><strong>Search Results:</strong></div>
+        <ul class="movie-grid">
+            {% for movie in movies %}
+            <li class="movie-item">
+                <a href="{{ url_for('movies.movie_detail', movie_id=movie.id) }}">
+                    <img src="https://image.tmdb.org/t/p/w154{{ movie.poster_path }}" alt="{{ movie.title }} poster"
+                        class="movie-poster">
+                    <div class="movie-info">
+                        <p class="title is-5">{{ movie.title }}</p>
+                        <p>Average Rating: {{ movie.vote_average }}</p>
+                    </div>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+
+{% endblock %}

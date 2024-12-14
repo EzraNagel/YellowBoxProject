@@ -10,6 +10,44 @@ def movies_view():
     movie_list = Movie.query.all()
     return render_template('movies/view.html', movies=movie_list)
 
+@movies.route('/search', methods=['GET', 'POST'])
+def search():
+    movies = []
+    if request.method == 'GET':
+        title = request.args.get('title')
+        run_time_min = request.args.get('run_time_min')
+        run_time_max = request.args.get('run_time_max')
+        popularity_min = request.args.get('popularity_min')
+        popularity_max = request.args.get('popularity_max')
+        release_date_min = request.args.get('release_date_min')
+        release_date_max = request.args.get('release_date_max')
+        rating_min = request.args.get('rating_min')
+        rating_max = request.args.get('rating_max')
+
+        query = db.session.query(Movie)
+
+        if title:
+            query = query.filter(Movie.title.ilike(f'%{title}%'))
+        if run_time_min:
+            query = query.filter(Movie.runtime >= int(run_time_min))
+        if run_time_max:
+            query = query.filter(Movie.runtime <= int(run_time_max))
+        if popularity_min:
+            query = query.filter(Movie.popularity >= float(popularity_min))
+        if popularity_max:
+            query = query.filter(Movie.popularity <= float(popularity_max))
+        if release_date_min:
+            query = query.filter(Movie.release_date >= release_date_min)
+        if release_date_max:
+            query = query.filter(Movie.release_date <= release_date_max)
+        if rating_min:
+            query = query.filter(Movie.vote_average >= float(rating_min))
+        if rating_max:
+            query = query.filter(Movie.vote_average <= float(rating_max))
+
+        movies = query.all()
+
+    return render_template('movies/search.html', movies=movies)
 
 @movies.route('/edit_movie/<int:movie_id>', methods=['GET', 'POST'])
 def edit_movie(movie_id):
