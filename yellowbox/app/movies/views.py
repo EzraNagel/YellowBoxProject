@@ -159,12 +159,29 @@ def movies_search_results():
         query = query.filter(Movie.title.ilike(f'%{title}%'))
     if run_time_min is not None and run_time_max is not None:
         query = query.filter(Movie.runtime.between(run_time_min, run_time_max))
+    elif run_time_min is not None:
+        query = query.filter(Movie.runtime >= run_time_min)
+    elif run_time_max is not None:
+        query = query.filter(Movie.runtime <= run_time_max)
     if popularity_min is not None and popularity_max is not None:
         query = query.filter(Movie.popularity.between(popularity_min, popularity_max))
-    if release_date_min and release_date_max:
-        query = query.filter(Movie.release_date.between(release_date_min, release_date_max))
+    elif popularity_min is not None:
+        query = query.filter(Movie.popularity >= popularity_min)
+    elif popularity_max is not None:
+        query = query.filter(Movie.popularity <= popularity_max)
+    if release_date_min or release_date_max:
+        if release_date_min and release_date_max:
+            query = query.filter(Movie.release_date.between(release_date_min, release_date_max))
+        elif release_date_min:
+            query = query.filter(Movie.release_date >= release_date_min)
+        elif release_date_max:
+            query = query.filter(Movie.release_date <= release_date_max)
     if rating_min is not None and rating_max is not None:
         query = query.filter(Movie.vote_average.between(rating_min, rating_max))
+    elif rating_min is not None:
+        query = query.filter(Movie.vote_average >= rating_min)
+    elif rating_max is not None:
+        query = query.filter(Movie.vote_average <= rating_max)
 
     movies = query.all()
 
