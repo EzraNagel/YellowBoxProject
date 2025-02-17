@@ -3,3 +3,4 @@ __pycache__/
 *.py[cod]
 database.db
 yellowbox/Dockerfile
+yellowbox/config.py

@@ -1,78 +1,33 @@
-CSC 407 Project
-Ethan Engert and Ezra Nagel
+Yellowbox Cloud-Based Movie Rental Site
+Ezra Nagel and Ethan Engert
 
-To run:
-    python -m venv .venv
-    source .venv/bin/activate
-    pip install -r requirements.txt
+A full-stack movie rental application replica of Redbox built using Flask, AWS EC2, and Docker. This project enables users to browse movies, rent them, and manage rental box locations through an intuitive web interface.
+Project's setup.py and Dockerfile are removed for AWS access key security.
 
-Create mysql database if not done already:
-    mysql -u root -p
-    
-    CREATE DATABASE yellowbox_db;
-    CREATE USER 'yellowbox_user'@'localhost' IDENTIFIED BY 'password';
-    GRANT ALL PRIVILEGES ON yellowbox_db.* TO 'yellowbox_user'@'localhost';
-    FLUSH PRIVILEGES;
+## Features
 
-Run Project:
-    cd yellowbox
-    python flasky.py
+### Movie Management
+- Add, update, and remove movie listings
+- Store movie details in a MySQL database
+- Search and filter movies based on various criteria
 
-Import Tables:
+### Rental System
+- Rent movies directly from the platform
+- Track active rentals and return status
+- Manage rental kiosks and availability
 
-    Powershell:
-        Get-Content yellowbox_db.sql | mysql -u yellowbox_user -p yellowbox_db    
-    Command Line:
-        mysql -u yellowbox_user -p yellowbox_db < yellowbox_db.sql
-        password: password
+### User Authentication
+- Secure user registration and login
+- Session management for user authentication
+- Role-based access control (admin and user)
 
-    Command for creating .sql file: 
-        mysqldump -u yellowbox_user -p yellowbox_db > yellowbox_db.sql 
+### Cloud & Deployment
+- Hosted on AWS EC2
+- Dockerized for asy deployment and container management
 
-Example users:
-    Range from 1-15, just replace number
-    Username: user1
-    Password: pass1
-
-
-AWS/ Docker:
-    
-    mysql -h yellowbox-db.c12ociym6hbt.us-east-1.rds.amazonaws.com -u admin -p -P 3306 yellowbox_db < yellowbox_db.sql
-
-    docker build -t flasky .
-
-    docker run -p 5000:5000 flasky
-
-
-ssh -i "yellowbox-key-pair.pem" ubuntu@ec2-54-146-181-208.compute-1.amazonaws.com
-sudo apt update
-
-generate token with read rights
-git clone https://<USERNAME>:<TOKEN>@github.com/EzraNagel/CSC407.git
-
-sudo apt install python3.12-venv
-sudo python3 -m venv venv
-source venv/bin/activate
-
-sudo apt install pkg-config libmysqlclient-dev
-sudo apt install build-essential
-sudo apt install python3.12-dev
-pip install flask-wtf
-pip install -r requirements.txt
-
-server {
-    listen 80;
-    server_name ethanengert.com www.ethanengert.com;
-
-    location / {
-        proxy_pass http://127.0.0.1:5000; # Forward requests to Flask app
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-
-    # Optional: Redirect HTTP to HTTPS if you secure your site later
-    # return 301 https://$host$request_uri;
-}
-
+## Technologies Used
+- **Backend**: Flask (Python)
+- **Database**: MySQL
+- **Cloud Hosting**: AWS EC2
+- **Containerization**: Docker
+- **Frontend**: HTML, CSS
